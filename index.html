@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible">
+    <title>Netflix Scrapers</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-3.7.1.js"></script>
+    <script src="js/jquery.csv.js"></script>
+    <script src="https://d3js.org/d3.v6.js"></script>
+  </head>
+  <body>
+    <main>
+        <h1>Netflix Scrapers</h1>  
+        <!--IMDB/TMDB scores of an actor per year graph-->
+        <select id="score_type">
+          <option value="imdb">IMDB</option>
+          <option value="tmdb">TMDB</option>
+        </select>
+        <div id="viz_scores_per_year"></div>
+        <!--Circle graph with actor network-->
+        <!--Overall ranking based on IMDB/TMDB scores-->
+    </main>
+    <script src="js/index.js"></script>
+  </body>   
+  <footer>
+    Authors: Patrick Louis Aldover, Jérémy Chaverot, Jason Mina
+  </footer>
+</html>
