@@ -14,10 +14,13 @@
     <main>
         <h1>Netflix Scrapers</h1>  
         <!--IMDB/TMDB scores of an actor per year graph-->
+        <label for="individual">Name of actor/director:</label>
+        <input type="text" id="individual" name="individual"><br><br>
         <select id="score_type">
           <option value="imdb">IMDB</option>
           <option value="tmdb">TMDB</option>
         </select>
+
         <div id="viz_scores_per_year"></div>
         <!--Circle graph with actor network-->
         <!--Overall ranking based on IMDB/TMDB scores-->
