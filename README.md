@@ -67,6 +67,9 @@ Below are the illustrations of basic statistics regarding the data:
 ![Number of Netflix movies/shows per age certification](figures/n_ms_per_age_cert.png "Number of Netflix movies/shows per age certification")
 ![Number of actors per number of movies/shows they played in](figures/n_actors_per_ms.png "Number of actors per number of movies/shows they played in")
 ![Number of directors per number of movies/shows they directed](figures/n_directors_per_ms.png "Number of directors per number of movies/shows they directed")
+![Number of Actors Per IMDB Rating](figures/n_Actors_Per_IMDB_rating.png "Number of Actors Per IMDB Rating")
+
+
 ### Related work
 
 Our project idea was mainly inspired by an article of the New York Times listing the [25 greatest actors of all time](https://www.nytimes.com/interactive/2020/movies/greatest-actors-actresses.html).   
