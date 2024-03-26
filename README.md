@@ -68,6 +68,7 @@ Below are the illustrations of basic statistics regarding the data:
 ![Number of actors per number of movies/shows they played in](figures/n_actors_per_ms.png "Number of actors per number of movies/shows they played in")
 ![Number of directors per number of movies/shows they directed](figures/n_directors_per_ms.png "Number of directors per number of movies/shows they directed")
 ![Number of Actors Per IMDB Rating](figures/n_Actors_Per_IMDB_rating.png "Number of Actors Per IMDB Rating")
+![Number of Directors Per IMDB Rating](figures/n_Directors_Per_IMDB_rating.png "Number of Directors Per IMDB Rating")
 
 
 ### Related work
