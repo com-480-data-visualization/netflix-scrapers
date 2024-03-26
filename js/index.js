@@ -9,6 +9,8 @@ const rating_min = 0.0
 const rating_max = 10.0
 const offset_year = 1
 const duration_animation = 1000
+const duration_tooltip = 200
+const offset_tooltip = 10
 
 const year_min = 1950
 const year_max = 2022
@@ -53,6 +55,13 @@ function plotScoresPerYear(scores_per_year, mean_scores_per_year, mean_scores) {
                 .tickSize(-height)
                 .tickFormat(d3.format("d"))
                 .tickPadding(10))
+        .call(g => g.append("text")
+            .attr("x", width - 4)
+            .attr("y", -4)
+            .attr("font-weight", "bold")
+            .attr("text-anchor", "end")
+            .attr("fill", "currentColor")
+            .text("Year"))
     
     const y = d3.scaleLinear()
                 .domain([rating_min, rating_max])
@@ -62,6 +71,13 @@ function plotScoresPerYear(scores_per_year, mean_scores_per_year, mean_scores) {
         .call(d3.axisLeft(y)
                 .tickSize(-width)
                 .tickPadding(10))
+        .call(g => g.append("text")
+            .attr("x", 30)    
+            .attr("y", 10)
+            .attr("font-weight", "bold")
+            .attr("text-anchor", "end")
+            .attr("fill", "currentColor")
+            .text('Score'))
 
     if (scores_per_year.length == 0) {
         svg.append('rect')
@@ -84,7 +100,40 @@ function plotScoresPerYear(scores_per_year, mean_scores_per_year, mean_scores) {
 
         return
     }
+
+    // tooltips
+    var tooltip = d3.select('#viz_scores_per_year')
+                    .append('div')
+                        .style('opacity', 0)
+                        .attr('class', 'tooltip')
+                        .style('background-color', 'black')
+                        .style('border-radius', '15px')
+                        .style('padding', '12px')
+                        .style('color', 'white')
+                        .style('width', '250px')
+    var showTooltip = function (event, d) {
+        tooltip.transition()
+                .duration(duration_tooltip)
+        text = 'Title: ' + d.title + ' (Rated: ' + ((d.age_certification != '') ? d.age_certification : '-') + ')<br>'
+        text += 'Runtime: ' + d.runtime + ' min.<br>'
+        text += 'Description: ' + d.description
+        tooltip.style("opacity", 1)
+                .html(text)
+                .style("left", event.x + offset_tooltip + "px")
+                .style("top", event.y + offset_tooltip + "px")          
+    }
+    var moveTooltip = function(event, d) {
+        tooltip.style("left", event.x + offset_tooltip + "px")
+                .style("top", event.y + offset_tooltip + "px")
+  
+      }
+    var hideTooltip = function(event, d) {
+        tooltip.transition()
+                .duration(duration_tooltip)
+                .style("opacity", 0)
+      }
     
+
     // display mean line
     var value = $("#score_type").val()
 
@@ -125,6 +174,9 @@ function plotScoresPerYear(scores_per_year, mean_scores_per_year, mean_scores) {
                         .style("fill", "#00d4c6")
                         .style("stroke", "black") 
                         .style("stroke-width", 2)
+                    .on("mouseover", showTooltip )
+                    .on("mousemove", moveTooltip )
+                    .on("mouseleave", hideTooltip )
                     
 
     // display mean scores   
@@ -133,7 +185,7 @@ function plotScoresPerYear(scores_per_year, mean_scores_per_year, mean_scores) {
                         .join('circle')
                             .attr("cx", d => x(d.year))
                             .attr("cy", d => y(d[value]))
-                            .attr("r", 7)
+                            .attr("r", 5)
                             .style("fill", "red")
                             .style("stroke", "black") 
                             .style("stroke-width", 2)
@@ -191,7 +243,12 @@ function prepareData(name_individual) {
         scores_per_year.push({
             imdb: score_imdb, 
             tmdb: score_tmdb, 
-            year: year
+            year: year,
+            title: ms.title,
+            description: ms.description,
+            type: (ms.type == 'MOVIE') ? 'Movie' : 'Show',
+            age_certification: ms.age_certification,
+            runtime: ms.runtime
         })
     }
 
