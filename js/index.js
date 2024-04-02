@@ -223,6 +223,114 @@ function plotScoresPerYear(scores_per_year, mean_scores_per_year, mean_scores) {
     })
 }
 
+// https://observablehq.com/d/3b363d37f93bd20b
+function plotNetwork(network) {
+    // TODO: use ids to link nodes and label names of actor/director and character name
+    // TODO: color based on rating
+    // TODO: make size of circles different based on if it's a movie/show or an actor/director
+    const types = Array.from(new Set(network.map(d => d.type)))
+    const nodes = Array.from(new Set(network.flatMap(l => [l.source, l.target])), id => ({id}))
+    const links = network.map(d => Object.create(d))
+    console.log(nodes)
+
+    const color = d3.scaleOrdinal(types, d3.schemeCategory10)
+    console.log(links)
+    console.log(color)
+    const simulation = d3.forceSimulation(nodes)
+                            .force("link", d3.forceLink(links).id(d => d.id))
+                            .force("charge", d3.forceManyBody().strength(-400))
+                            .force("x", d3.forceX())
+                            .force("y", d3.forceY())
+    
+    $('#viz_network').empty()
+    var svg = d3.select("#viz_network")
+                .append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+
+    function linkArc(d) {
+        const r = Math.hypot(d.target.x - d.source.x, d.target.y - d.source.y);
+        return `
+            M${d.source.x},${d.source.y}
+            L${d.target.x},${d.target.y}
+        `;
+    }
+
+    drag = simulation => {
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x
+            d.fy = d.y
+        }
+        
+        function dragged(event, d) {
+            d.fx = event.x
+            d.fy = event.y
+        }
+        
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null
+            d.fy = null
+        }
+        
+        return d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended)
+    }
+    const g = svg.append('g')
+    const link = g.attr("fill", "none")
+                    .attr("stroke-width", 2)
+                    .selectAll("path")
+                    .data(links)
+                    .join("path")
+                        .attr("stroke", function(d) {
+                            //console.log(d)
+                            return color(d.type)
+                        })
+                        .attr("marker-end", d => `url(${new URL(`#arrow-${d.type}`, location)})`)
+    
+    const node = g.append("g")
+                    .attr("fill", "currentColor")
+                    .attr("stroke-linecap", "round")
+                    .attr("stroke-linejoin", "round")
+                    .selectAll("g")
+                    .data(nodes)
+                    .join("g")
+                        .call(drag(simulation));
+              
+    node.append("circle")
+        .attr("stroke", "white")
+        .attr("stroke-width", 1.5)
+        .attr("r", 4);
+    
+    node.append("text")
+        .attr("x", 8)
+        .attr("y", "0.31em")
+        .text(function (d) {
+            //console.log(d)
+            return d.id
+        })
+        .clone(true).lower()
+        .attr("fill", "none")
+        .attr("stroke", "white")
+        .attr("stroke-width", 3);
+              
+    simulation.on("tick", () => {
+        link.attr("d", linkArc)
+        node.attr("transform", d => `translate(${d.x},${d.y})`)
+    })
+    svg.call(d3.zoom()
+                .extent([[0, 0], [width, height]])
+                .scaleExtent([0.25, 8])
+                .on("zoom", zoomed))
+          
+    function zoomed({transform}) {
+        g.attr("transform", transform);
+    }
+}
+
 function prepareData(name_individual) {
     credits_filtered = credits.filter(credit => credit.name == name_individual)
 
@@ -276,6 +384,58 @@ function prepareData(name_individual) {
         tmdb: mean_scores_per_year.reduce((acc, curr) => acc + curr.tmdb, 0) / l
     }
     plotScoresPerYear(scores_per_year, mean_scores_per_year, mean_scores)
+
+
+    //plotNetwork()
+    network = []
+    
+    for (credit of credits_filtered) {
+        // find movie ratings
+        ms_id = credit.id
+        person_id = credit.person_id
+        character = credit.character
+        result = movies_and_shows.filter(ms => ms.id == ms_id)
+        if (result.length == 0) {
+            // TODO: maybe avoid this by removing entries in credits as well
+            console.log('Movie with id ' + ms_id + ' doesn\'t have IMDB/TMDB scores. Skipping ...')
+            continue
+        }
+        ms = result[0]
+        title = ms.title
+        score_imdb = parseFloat(ms.imdb_score)
+        score_tmdb = parseFloat(ms.tmdb_score)
+
+
+        // find all actors and directors of movie
+        result = credits.filter(ms => ms.id == ms_id && ms.person_id != person_id)
+
+        network.push({
+            /*sourc_name: name_individual + ' (' + character + ')',
+            source: person_id,
+            target: ms_id,
+            target_name: title,*/
+            source: name_individual,
+            target: title,
+            imdb: score_imdb,
+            tmdb: score_tmdb,
+            type: credit.type
+        })
+        for (person of result) {
+            network.push({
+                /*source_name: title,
+                source: ms_id,
+                target_name: person.name + ' (' + person.character + ')',
+                target: person.person_id,*/
+                source: title,
+                target: person.name,
+                imdb: score_imdb,
+                tmdb: score_tmdb,
+                type: person.type
+            })
+        }
+    }
+    plotNetwork(network)
+    
 }
 
 function init() {

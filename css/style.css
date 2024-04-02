@@ -1,0 +1,3 @@
+.tooltip {
+    position: absolute; /* or any value higher than other elements */
+}
