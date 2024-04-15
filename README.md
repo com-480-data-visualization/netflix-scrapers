@@ -88,7 +88,7 @@ As far as we know, we are the only group that uses this dataset. We do recognize
 
 **10% of the final grade**
 
-Website draft: [netflix-scrapers.vercel.app](https://netflix-scrapers.vercel.app)
+Website draft link: [netflix-scrapers.vercel.app](https://netflix-scrapers.vercel.app)
 
 
 ## Milestone 3 (31st May, 5pm)
