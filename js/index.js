@@ -287,9 +287,8 @@ function plotNetwork(network) {
                     .join("path")
                         .attr("stroke", function(d) {
                             //console.log(d)
-                            return color(d.type)
+                            return d.type
                         })
-                        .attr("marker-end", d => `url(${new URL(`#arrow-${d.type}`, location)})`)
     
     const node = g.append("g")
                     .attr("fill", "currentColor")
@@ -298,18 +297,17 @@ function plotNetwork(network) {
                     .selectAll("g")
                     .data(nodes)
                     .join("g")
-                        .call(drag(simulation));
+                        .call(drag(simulation))
               
     node.append("circle")
         .attr("stroke", "white")
         .attr("stroke-width", 1.5)
-        .attr("r", 4);
+        .attr("r", 4)
     
     node.append("text")
         .attr("x", 8)
         .attr("y", "0.31em")
         .text(function (d) {
-            //console.log(d)
             return d.id
         })
         .clone(true).lower()
@@ -329,6 +327,15 @@ function plotNetwork(network) {
     function zoomed({transform}) {
         g.attr("transform", transform);
     }
+}
+
+function getColor(percentage) {
+	red = (percentage < 50.0) ? 255 : Math.round(510 - 5.1 * percentage)
+    green = (percentage < 50.0) ? Math.round(5.1 * percentage) : 255 
+    blue = 0
+	hue = (0x10000 * red + 0x100 * green + blue).toString(16)
+	color = '#' + ('000000' + hue).slice(-6)
+    return color
 }
 
 function prepareData(name_individual) {
@@ -408,6 +415,8 @@ function prepareData(name_individual) {
 
         // find all actors and directors of movie
         result = credits.filter(ms => ms.id == ms_id && ms.person_id != person_id)
+        
+        color = getColor((score_imdb / 10.0) * 100)
 
         network.push({
             /*sourc_name: name_individual + ' (' + character + ')',
@@ -418,7 +427,8 @@ function prepareData(name_individual) {
             target: title,
             imdb: score_imdb,
             tmdb: score_tmdb,
-            type: credit.type
+            type: color,//credit.type
+            is_ms: false
         })
         for (person of result) {
             network.push({
@@ -430,7 +440,8 @@ function prepareData(name_individual) {
                 target: person.name,
                 imdb: score_imdb,
                 tmdb: score_tmdb,
-                type: person.type
+                type: color,
+                is_ms: true//person.type
             })
         }
     }
