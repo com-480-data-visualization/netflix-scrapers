@@ -97,6 +97,10 @@ section {
     background-color: #333;
     overflow: hidden;
     z-index: 1000;
+
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0.3s, opacity 0.3s linear;
 }
 
 /* Style the links inside the navigation bar */
@@ -157,6 +161,12 @@ section {
     height: 400px;
     background-color: white;
     order: 2;
+}
+
+.hide {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0.3s, opacity 0.3s linear;
 }
 
 @media screen and (max-width: 800px) {

@@ -515,6 +515,7 @@ function getWindowData() {
 
 function animateMenuIcon(bars) {
     bars.classList.toggle('change')
+    $('.topnav').toggleClass('hide')
 }
 
 init()
