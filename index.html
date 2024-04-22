@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible">
@@ -9,27 +9,103 @@
     <script src="js/jquery-3.7.1.js"></script>
     <script src="js/jquery.csv.js"></script>
     <script src="https://d3js.org/d3.v6.js"></script>
-  </head>
-  <body>
-    <main>
-        <h1>Netflix Scrapers</h1>  
-        <!--IMDB/TMDB scores of an actor per year graph-->
-        <label for="individual">Name of actor/director:</label>
-        <input type="text" id="individual" name="individual"><br><br>
-        <select id="score_type">
-          <option value="imdb">IMDB</option>
-          <option value="tmdb">TMDB</option>
-        </select>
+</head>
 
-        <div id="viz_scores_per_year"></div>
-        <!--Circle graph with actor network-->
-        <div id="viz_network"></div>
-        <!--Overall ranking based on IMDB/TMDB scores-->
-        <div id="viz_score_ranking"></div>
-    </main>
-    <script src="js/index.js"></script>
-  </body>   
-  <footer>
-    Authors: Patrick Louis Aldover, Jérémy Chaverot, Jason Mina
-  </footer>
+<body>
+<main>
+
+    <div class="topnav">
+        <a class="active" href="#overview">Project overview</a>
+        <a href="#viz1">Visualization 1</a>
+        <a href="#viz2">Visualization 2</a>
+        <a href="#viz3">Visualization 3</a>
+        <a href="#viz4">Visualization 4</a>
+    </div>
+
+    <div class="container">
+
+        <section id="overview" class="one">
+            <h1 class="title">Project overview</h1>
+            <h1 class="NetflixScrapers">Netflix Scrapers</h1>
+        </section>
+
+        <section id="viz1" class="two">
+            <div class="viz-title-container">
+                <h1 class="title">
+                    Visualization 1
+                </h1>
+            </div>
+            <div class="viz-container">
+                <!--IMDB/TMDB scores of an actor per year graph-->
+                <select id="score_type">
+                    <option value="imdb">IMDB</option>
+                    <option value="tmdb">TMDB</option>
+                </select> <br>
+                <label for="individual">Name of actor/director:</label>
+                <input type="text" id="individual" name="individual"><br><br>
+                <div id="viz_scores_per_year"></div>
+
+            </div>
+            <!--Place to add comments later-->
+            <div class="viz-text-container">
+                <text>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Facilisis volutpat est velit egestas dui id. Iaculis at erat pellentesque
+                    adipiscing commodo elit at imperdiet dui. Tortor consequat id porta nibh venenatis cras sed felis
+                    eget. Morbi tristique senectus et netus et malesuada fames ac. Cras sed felis eget velit aliquet
+                    sagittis id consectetur purus. Elementum tempus egestas sed sed risus pretium quam. Fames ac turpis
+                    egestas integer eget. Et malesuada fames ac turpis. Quam quisque id diam vel quam.
+                </text>
+            </div>
+        </section>
+
+        <section id="viz2" class="three">
+            <div class="viz-title-container">
+                <h1 class="title">
+                    Visualization 2
+                </h1>
+            </div>
+            <div class="viz-container">
+                <!--Circle graph with actor network-->
+                <div id="viz_network"></div>
+                <!--Overall ranking based on IMDB/TMDB scores-->
+                <div id="viz_score_ranking"></div>
+            </div>
+            <!--Place to add comments later-->
+            <div class="viz-text-container">
+                <text>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Facilisis volutpat est velit egestas dui id. Iaculis at erat pellentesque
+                    adipiscing commodo elit at imperdiet dui. Tortor consequat id porta nibh venenatis cras sed felis
+                    eget. Morbi tristique senectus et netus et malesuada fames ac. Cras sed felis eget velit aliquet
+                    sagittis id consectetur purus. Elementum tempus egestas sed sed risus pretium quam. Fames ac turpis
+                    egestas integer eget. Et malesuada fames ac turpis. Quam quisque id diam vel quam.
+                </text>
+            </div>
+        </section>
+
+        <section id="viz3" class="four">
+            <h1 class="title">Visualization 3</h1>
+        </section>
+
+        <section id="viz4" class="five">
+            <h1 class="title">Visualization 4</h1>
+        </section>
+
+    </div>
+
+</main>
+<script src="js/index.js"></script>
+</body>
+<footer>
+    <p>
+        Authors: Patrick Louis Aldover, Jérémy Chaverot, Jason Mina.
+    </p>
+    <p>
+        Project conducted in the framework of the course COM-480: Data Visualization at EPFL.
+    </p>
+    <p>
+        Spring 2024
+    </p>
+</footer>
 </html>
