@@ -12,9 +12,11 @@ html {
 }
 
 .container {
+    width: 100%;
     scroll-snap-type: y mandatory;
-    overflow-y: scroll;
+    /*overflow-y: scroll;*/
 }
+
 
 section {
     height: 150vh;
@@ -64,7 +66,7 @@ section {
 
 
 .one {
-    background-color: rgb(5, 140, 225)
+    background-color: rgb(5, 140, 225);
 }
 
 .two {
@@ -119,9 +121,61 @@ section {
     color: white;
 }
 
+#menu-icon {
+    z-index: 3000;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    display: none;
+    cursor: pointer;
+}
+  
+.bar1, .bar2, .bar3 {
+    width: 32px;
+    height: 5px;
+    margin: 5.5px 0;
+    background-color: #333;
+    transition: 0.3s;
+}
+
+.change .bar1 {
+    transform: translate(0, 11px) rotate(-45deg);
+}
+
+.change .bar2 {
+    opacity: 0;
+}
+
+.change .bar3 {
+    transform: translate(0, -11px) rotate(45deg);
+}
+
 .white-rectangle {
     width: 800px;
     height: 400px;
     background-color: white;
     order: 2;
 }
+
+@media screen and (max-width: 800px) {
+    .topnav a {
+        float: none;
+        display: block;
+        font-size: 16px;
+        padding: 7px 8px;
+    }
+
+    .NetflixScrapers {
+        font-size: 50px;
+    }
+
+    .title {
+        font-size: 32px;
+    }
+
+    #menu-icon {
+        display: block;
+    }
+ }

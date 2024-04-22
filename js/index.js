@@ -1,9 +1,9 @@
 // constants
 const margin = {top: 20, right: 30, bottom: 20, left: 30}
-const width = 800  - margin.left - margin.right
-const height = 600 - margin.top - margin.bottom
+/*const width = window.innerWidth / 2 - margin.left - margin.right //800  - margin.left - margin.right
+const height = window.innerHeight / 2 - margin.left - margin.right//600 - margin.top - margin.bottom
 const innerWidth = width - margin.left - margin.right;
-const innerHeight = height - margin.top - margin.bottom;
+const innerHeight = height - margin.top - margin.bottom;*/
 
 const rating_min = 0.0
 const rating_max = 10.0
@@ -31,7 +31,7 @@ function getMax(data, key) {
 }
 
 // https://d3-graph-gallery.com/graph/connectedscatter_select.html
-function plotScoresPerYear(scores_per_year, mean_scores_per_year, mean_scores) {
+function plotScoresPerYear(scores_per_year, mean_scores_per_year, mean_scores, width, height) {
     // TODO: handle 1 movie
     // svg and axis
     $('#viz_scores_per_year').empty()
@@ -224,7 +224,7 @@ function plotScoresPerYear(scores_per_year, mean_scores_per_year, mean_scores) {
 }
 
 // https://observablehq.com/d/3b363d37f93bd20b
-function plotNetwork(network) {
+function plotNetwork(network, width, height) {
     // TODO: use ids to link nodes and label names of actor/director and character name
     // TODO: color based on rating
     // TODO: make size of circles different based on if it's a movie/show or an actor/director
@@ -338,7 +338,7 @@ function getColor(percentage) {
     return color
 }
 
-function prepareData(name_individual) {
+function prepareData(name_individual, width, height) {
     credits_filtered = credits.filter(credit => credit.name == name_individual)
 
     // get scores
@@ -390,7 +390,7 @@ function prepareData(name_individual) {
         imdb: mean_scores_per_year.reduce((acc, curr) => acc + curr.imdb, 0) / l,
         tmdb: mean_scores_per_year.reduce((acc, curr) => acc + curr.tmdb, 0) / l
     }
-    plotScoresPerYear(scores_per_year, mean_scores_per_year, mean_scores)
+    plotScoresPerYear(scores_per_year, mean_scores_per_year, mean_scores, width, height)
 
 
     //plotNetwork()
@@ -445,7 +445,7 @@ function prepareData(name_individual) {
             })
         }
     }
-    plotNetwork(network)
+    plotNetwork(network, width, height)
     
 }
 
@@ -484,7 +484,10 @@ function init() {
             alert('No entries for "' + name_individual, '".')
             return
         }
-        prepareData(name_individual)
+        window_data = getWindowData()
+        width = window_data[0]
+        height = window_data[1]
+        prepareData(name_individual, width, height)
 
      });
      $('#individual').keyup(function(e){
@@ -497,7 +500,29 @@ function init() {
     // default value
     name_individual = 'Kareena Kapoor Khan'
     $('#individual').val(name_individual)
-    prepareData(name_individual)
+    window_data = getWindowData()
+    width = window_data[0]
+    height = window_data[1]
+    prepareData(name_individual, width, height)
+}
+
+
+function getWindowData() {
+    width = window.innerWidth * (2 / 3) - margin.left - margin.right
+    height = window.innerHeight * (2 / 3) - margin.left - margin.right
+    return [width, height]
+}
+
+function animateMenuIcon(bars) {
+    bars.classList.toggle('change')
 }
 
 init()
+
+window.onresize = () => {
+    name_individual = $('#individual').val()
+    window_data = getWindowData()
+    width = window_data[0]
+    height = window_data[1]
+    prepareData(name_individual, width, height)
+};
