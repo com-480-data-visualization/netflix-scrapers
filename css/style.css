@@ -118,3 +118,10 @@ section {
     background-color: #0c85e2;
     color: white;
 }
+
+.white-rectangle {
+    width: 800px;
+    height: 400px;
+    background-color: white;
+    order: 2;
+}
