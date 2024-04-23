@@ -183,6 +183,11 @@ section {
     transition: visibility 0.3s, opacity 0.3s linear;
 }
 
+footer {
+    background-color: #333;
+    color: #ffffff;
+}
+
 @media screen and (max-width: 800px) {
     .topnav a {
         float: none;

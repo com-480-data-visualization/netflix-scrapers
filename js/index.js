@@ -40,7 +40,7 @@ function plotScoresPerYear(scores_per_year, mean_scores_per_year, mean_scores, w
                     .attr("width", width + margin.left + margin.right)
                     .attr("height", height + margin.top + margin.bottom)
                 .append("g")
-                    .attr("transform", `translate(${margin.left}, ${margin.top})`)
+                    .attr("transform", `translate(${margin.left}, ${margin.top / 3})`)
 
     year_min_curr = (scores_per_year.length > 0) ? getMin(scores_per_year, 'year') - offset_year : year_min
     year_max_curr = (scores_per_year.length > 0) ? getMax(scores_per_year, 'year') + offset_year : year_max
@@ -48,20 +48,28 @@ function plotScoresPerYear(scores_per_year, mean_scores_per_year, mean_scores, w
     const x = d3.scaleLinear()
                 .domain([year_min_curr, year_max_curr])
                 .range([0, width])
-    svg.append("g")
+    const x_axis = svg.append("g")
         .attr("class", "grid")
         .attr("transform", `translate(0, ${height})`)
         .call(d3.axisBottom(x)
                 .tickSize(-height)
                 .tickFormat(d3.format("d"))
                 .tickPadding(10))
-        .call(g => g.append("text")
+    if (width <= 800) {
+        x_axis.selectAll('text')
+        .attr('transform', 'rotate(90)')
+        .attr("x", 16)
+        .attr("y", -4)
+    }
+    
+    x_axis.call(g => g.append("text")
             .attr("x", width - 4)
             .attr("y", -4)
             .attr("font-weight", "bold")
             .attr("text-anchor", "end")
             .attr("fill", "currentColor")
             .text("Year"))
+        
     
     const y = d3.scaleLinear()
                 .domain([rating_min, rating_max])
