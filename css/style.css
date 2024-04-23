@@ -210,14 +210,13 @@ footer {
  }
 
 
+/* ---------- Netflix logo animation ---------- */
+
 :root {
     --primary-colour: #E50914;
-    --shadow-colour: black;
+    --shadow-colour: #3a3a3a;
     --shadow-intensity: 0.6;
-    --UIControlsSize: 30px;
 }
-
-/* ---------- Netflix SVG ---------- */
 
 .base {
     fill: var(--primary-colour);
@@ -243,8 +242,4 @@ body {
     justify-content: center;
     align-items: center;
     height: 80vh;
-}
-
-svg {
-    margin: 15vmin;
 }
