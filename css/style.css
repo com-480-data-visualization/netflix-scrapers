@@ -208,3 +208,43 @@ footer {
         display: block;
     }
  }
+
+
+:root {
+    --primary-colour: #E50914;
+    --shadow-colour: black;
+    --shadow-intensity: 0.6;
+    --UIControlsSize: 30px;
+}
+
+/* ---------- Netflix SVG ---------- */
+
+.base {
+    fill: var(--primary-colour);
+    transition: fill 0.4s;
+}
+
+.shadow-start {
+    stop-color: var(--shadow-colour);
+    stop-opacity: var(--shadow-intensity);
+
+}
+.shadow-end {
+    stop-color: var(--shadow-colour);
+    stop-opacity: 0;
+}
+
+body {
+    background: black;
+}
+
+.netflix-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+svg {
+    margin: 15vmin;
+}
