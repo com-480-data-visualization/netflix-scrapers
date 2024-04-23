@@ -55,7 +55,8 @@ section {
 }
 
 .viz-container {
-    order: 2;
+   order: 2;
+   
 }
 
 .viz-text-container {
@@ -63,6 +64,18 @@ section {
     padding-top: 5%;
     padding-bottom: 5%;
     text-align: justify;
+}
+
+#viz_scores_per_year {
+    display: block;
+    text-align: center;
+    margin: auto;
+}
+
+#viz_network {
+    display: block;
+    text-align: center;
+    margin: auto;
 }
 
 

@@ -247,7 +247,6 @@ function plotNetwork(network, width, height) {
                 .append("svg")
                     .attr("width", width + margin.left + margin.right)
                     .attr("height", height + margin.top + margin.bottom)
-
     function linkArc(d) {
         const r = Math.hypot(d.target.x - d.source.x, d.target.y - d.source.y);
         return `
@@ -498,7 +497,7 @@ function init() {
      });
 
     // default value
-    name_individual = 'Kareena Kapoor Khan'
+    name_individual = 'Kareena Kapoor Khan' // 'Robert Downey Jr.'//
     $('#individual').val(name_individual)
     window_data = getWindowData()
     width = window_data[0]
