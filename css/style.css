@@ -237,13 +237,10 @@ body {
     background: black;
 }
 
-.netflix-animation-container {
-    margin: 15vmin;
-}
-
 .netflix-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 80vh;
+    margin: 15vmin;
 }
