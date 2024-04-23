@@ -214,7 +214,7 @@ footer {
 
 :root {
     --primary-colour: #E50914;
-    --shadow-colour: #3a3a3a;
+    --shadow-colour: black;
     --shadow-intensity: 0.6;
 }
 
@@ -235,6 +235,10 @@ footer {
 
 body {
     background: black;
+}
+
+.netflix-animation-container {
+    margin: 15vmin;
 }
 
 .netflix-container {
