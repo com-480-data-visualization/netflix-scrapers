@@ -154,11 +154,12 @@ section {
     width: 32px;
     height: 5px;
     margin: 5.5px 0;
-    background-color: #333;
+    background-color: #951010;
     transition: 0.3s;
 }
 
 .change .bar1 {
+    background-color: #333;
     transform: translate(0, 11px) rotate(-45deg);
 }
 
@@ -167,6 +168,7 @@ section {
 }
 
 .change .bar3 {
+    background-color: #333;
     transform: translate(0, -11px) rotate(45deg);
 }
 

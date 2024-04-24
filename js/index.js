@@ -496,14 +496,15 @@ function init() {
         height = window_data[1]
         prepareData(name_individual, width, height)
 
-     });
-     $('#individual').keyup(function(e){
-         if(e.keyCode == 13)
-         {
-             $(this).trigger("enterKey");
-         }
-     });
-     addNavListeners()
+    });
+    $('#individual').keyup(function(e){
+        if(e.keyCode == 13)
+        {
+            $(this).trigger("enterKey");
+        }
+    });
+    addNavListeners()
+    $('#menu-icon').toggleClass('change')
     // default value
     name_individual = 'Kareena Kapoor Khan' // 'Robert Downey Jr.'//
     $('#individual').val(name_individual)
@@ -535,8 +536,8 @@ function addNavListeners() {
         });
     }
 }
-init()
 
+init()
 window.onresize = () => {
     name_individual = $('#individual').val()
     window_data = getWindowData()
