@@ -115,11 +115,13 @@ section {
     visibility: visible;
     opacity: 1;
     transition: visibility 0.3s, opacity 0.3s linear;
+
+    text-align: center;
 }
 
 /* Style the links inside the navigation bar */
 .topnav a {
-    float: left;
+    display: inline-block;
     color: #f2f2f2;
     text-align: center;
     padding: 14px 16px;
@@ -190,6 +192,7 @@ section {
 }
 
 footer {
+    font-size: 11px;
     background-color: #2a0808;
     color: #ffffff;
 }
@@ -241,6 +244,13 @@ footer {
 
 body {
     background: black;
+    overflow-x: hidden;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .netflix-container {
