@@ -103,7 +103,7 @@ function plotScoresPerYear(scores_per_year, mean_scores_per_year, mean_scores, w
             .attr("text-anchor", "middle")
             .attr("alignment-baseline", "middle")
             .text(d => "Not enough data to visualize :/")
-            .style("font-size", "24px")
+            .style("font-size", "12px")
             .style("font-weight", "bold")
 
         return
@@ -503,7 +503,7 @@ function init() {
              $(this).trigger("enterKey");
          }
      });
-
+     addNavListeners()
     // default value
     name_individual = 'Kareena Kapoor Khan' // 'Robert Downey Jr.'//
     $('#individual').val(name_individual)
@@ -525,6 +525,16 @@ function animateMenuIcon(bars) {
     $('.topnav').toggleClass('hide')
 }
 
+function addNavListeners() {
+    var links = document.getElementsByClassName("nav-link");
+    for (link of links) {
+        link.addEventListener("click", function() {
+            var current = document.getElementsByClassName("active");
+            current[0].className = current[0].className.replace(" active", "");
+            this.className += " active";
+        });
+    }
+}
 init()
 
 window.onresize = () => {
