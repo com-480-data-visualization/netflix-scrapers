@@ -183,6 +183,10 @@ section {
     transition: visibility 0.3s, opacity 0.3s linear;
 }
 
+.white-text {
+    color: white;
+}
+
 footer {
     background-color: #2a0808;
     color: #ffffff;
