@@ -88,6 +88,8 @@ As far as we know, we are the only group that uses this dataset. We do recognize
 
 **10% of the final grade**
 
+Visualization sketches and details: [Milestone_2](Milestone_2.pdf)
+
 Website draft link: [netflix-scrapers.vercel.app](https://netflix-scrapers.vercel.app)
 
 
