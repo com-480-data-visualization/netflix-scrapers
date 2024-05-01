@@ -78,6 +78,12 @@ section {
     margin: auto;
 }
 
+#viz_color_map {
+    display: block;
+    text-align: center;
+    margin: auto;
+}
+
 
 .one {
     background-color: #2a0808;

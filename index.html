@@ -194,10 +194,13 @@
             
             <div class="viz-container">
                 <!--Circle graph with actor network-->
+                <select id="score_type_network">
+                    <option value="imdb">IMDB</option>
+                    <option value="tmdb">TMDB</option>
+                </select> <br>
                 <div id="viz_network"></div>
 
-                <!--Overall ranking based on IMDB/TMDB scores-->
-                <div id="viz_score_ranking"></div>
+                <div id="viz_color_map"></div>
             </div>
 
             <!--Placeholder to add comments later-->
@@ -246,7 +249,9 @@
         </footer>
     </div>
 </main>
-
+<script src="js/utils.js"></script>
+<script src="js/viz-linechart.js"></script>
+<script src="js/viz-network.js"></script>
 <script src="js/index.js"></script>
 <script>
     function hideNetflixLogo() {
