@@ -12,7 +12,7 @@ function plotColorMap(dimensions) {
         .attr('width', width_svg)
         .attr('height', height_svg);
 
-    var colors = ['green', 'yellow', 'red'];
+    var colors = ['red', 'yellow', 'green'];
     var l = colors.length - 1;
 
     var linear_gradient = svg.append('defs')
@@ -33,11 +33,32 @@ function plotColorMap(dimensions) {
         });
 
     svg.append('rect')
-        .attr('x', 10)
-        .attr('y', 10)
+        .attr('x', 0)
+        .attr('y', 20)
         .attr('width', width + margin.left + margin.right)
         .attr('height', height_svg)
         .style('fill', 'url(#grad)');
+
+    svg.append("text")
+        .attr("x", 0)
+        .attr("y", 12)
+        .text('0.0')
+        .style("font-size", "10px")
+        .style("font-weight", "bold");
+    
+    svg.append("text")
+        .attr("x", (width + margin.left + margin.right - 20) / 2)
+        .attr("y", 12)
+        .text('5.0')
+        .style("font-size", "10px")
+        .style("font-weight", "bold");
+
+    svg.append("text")
+        .attr("x", width + margin.left + margin.right - 20)
+        .attr("y", 12)
+        .text('10.0')
+        .style("font-size", "10px")
+        .style("font-weight", "bold");
 }
 
 // inspired by: https://observablehq.com/d/3b363d37f93bd20b
