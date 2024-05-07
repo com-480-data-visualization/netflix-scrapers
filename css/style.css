@@ -197,6 +197,48 @@ section {
     color: white;
 }
 
+.centered {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+#form-name {
+    width: 100%;
+    position: relative;
+}
+
+
+#individual {
+    width: 50%;
+    border-radius: 0px;
+    border-color: #000000;
+    background-color: #ffffff;
+}
+
+#search-results {
+    text-align: left;
+    position: absolute;
+    left: 25%;
+    z-index: 100;
+    max-height: 200px;
+    overflow: scroll;
+    list-style-type: none;
+    background-color: #ffffff;
+    width: 50%;
+    font-size: 12px;
+}
+
+#search-results a {
+    cursor: pointer;
+}
+
+#search-results::-webkit-scrollbar {
+    display: none;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
 footer {
     font-size: 11px;
     background-color: #2a0808;

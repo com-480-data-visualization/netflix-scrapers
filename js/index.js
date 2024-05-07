@@ -20,7 +20,7 @@ function addNavListeners() {
 
 movies_and_shows = []
 credits = []
-
+credits_names = []
 
 function prepareData(name_individual, dimensions) {
     // extract parameters
@@ -151,6 +151,7 @@ function init() {
         async: false,
         success: function (csvd) {
             credits = $.csv.toObjects(csvd);
+            credits_names = [...new Set(credits.map(credit => credit.name))];
         },
         dataType: "text",
         complete: function () {
@@ -180,6 +181,7 @@ function init() {
     $('#menu-icon').toggleClass('change');
 
     // default value
+    $('#search-results').html('');
     name_individual = 'Kareena Kapoor Khan';
     $('#individual').val(name_individual);
     dimensions = getWindowData();
@@ -194,6 +196,34 @@ function getWindowData() {
     return dimensions;
 }
 
+function selectName(name) {
+    $('#search-results').html('');
+    $('#individual').val(name);
+    dimensions = getWindowData();
+    prepareData(name, dimensions);
+}
+
+function autocompleteSearch(input) {
+    if (input == '') {
+        return [];
+    }
+    var regex = new RegExp(input);
+    return credits_names.filter(function (name) {
+        if (name.match(regex)) {
+            return name;
+        }
+    });
+}
+
+function showResults(value) {
+    $('#search-results').html('');
+    var results = '';
+    var names = autocompleteSearch(value);
+    for (n of names) {
+        results += '<li><a onclick="selectName(this.text)">' + n + '</a></li>';
+    }
+    $('#search-results').html(results);
+}
 
 init()
 window.onresize = () => {

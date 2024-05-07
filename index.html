@@ -136,16 +136,18 @@
                 </h1>
             </div>
 
-            <div class="viz-container">
+            <div class="viz-container centered">
                 <!--IMDB/TMDB scores of an actor per year graph-->
                 <select id="score_type">
                     <option value="imdb">IMDB</option>
                     <option value="tmdb">TMDB</option>
                 </select> <br>
-                <label for="individual">Name of actor/director:</label>
-                <input type="text" id="individual" name="individual"><br><br>
+                <div id="form-name">
+                    <label class="label-name" for="individual">Name of actor/director:</label><br>
+                    <input class="input-name" type="text" id="individual" name="individual" onkeyup="showResults(this.value)"><br>
+                    <div id="search-results"></div>
+                </div>
                 <div id="viz_scores_per_year"></div>
-
             </div>
 
             <!--Placeholder to add comments later-->
