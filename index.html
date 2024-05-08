@@ -136,12 +136,12 @@
                 </h1>
             </div>
 
-            <div class="viz-container centered">
+            <div class="viz-container centered white-text">
                 <!--IMDB/TMDB scores of an actor per year graph-->
-                <select id="score_type">
-                    <option value="imdb">IMDB</option>
-                    <option value="tmdb">TMDB</option>
-                </select> <br>
+                <input type="radio" name="score_type_linechart" id="IMDB-linechart" value="IMDB" checked>
+                <label for="IMDB-linechart">IMDB</label>
+                <input type="radio" name="score_type_linechart" id="TMDB-linechart" value="TMDB">
+                <label for="TMDB-linechart">TMDB</label>
                 <div id="form-name">
                     <label class="label-name" for="individual">Name of actor/director:</label><br>
                     <input class="input-name" type="text" id="individual" name="individual" onkeyup="showResults(this.value)"><br>
@@ -151,7 +151,7 @@
             </div>
 
             <!--Placeholder to add comments later-->
-            <div class="viz-text-container">
+            <div class="viz-text-container white-text">
                 <text>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
                     et dolore magna aliqua. Facilisis volutpat est velit egestas dui id. Iaculis at erat pellentesque
@@ -194,19 +194,17 @@
                 </h1>
             </div>
             
-            <div class="viz-container">
+            <div class="viz-container white-text centered">
                 <!--Circle graph with actor network-->
-                <select id="score_type_network">
-                    <option value="imdb">IMDB</option>
-                    <option value="tmdb">TMDB</option>
-                </select> <br>
+                <input type="radio" name="score_type_network" id="IMDB-network" value="IMDB" checked>
+                <label for="IMDB-network">IMDB</label>
+                <input type="radio" name="score_type_network" id="TMDB-network" value="TMDB">
+                <label for="TMDB-network">TMDB</label>
                 <div id="viz_network"></div>
-
-                <div id="viz_color_map"></div>
             </div>
 
             <!--Placeholder to add comments later-->
-            <div class="viz-text-container">
+            <div class="viz-text-container white-text">
                 <text>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
                     et dolore magna aliqua. Facilisis volutpat est velit egestas dui id. Iaculis at erat pellentesque

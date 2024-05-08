@@ -4,6 +4,7 @@ html {
     scroll-behavior: smooth;
 }
 
+
 * {
     margin: 0;
     padding: 0;
@@ -20,7 +21,7 @@ html {
 
 
 section {
-    height: 150vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -78,19 +79,13 @@ section {
     margin: auto;
 }
 
-#viz_color_map {
-    display: block;
-    text-align: center;
-    margin: auto;
-}
-
 
 .one {
     background-color: #2a0808;
 }
 
 .two {
-    background-color: #eeeeee;
+    background-color: #141414;
 }
 
 .three {
@@ -98,7 +93,7 @@ section {
 }
 
 .four {
-    background-color: #e1e1e1;
+    background-color: #141414;
 }
 
 .five {
@@ -214,6 +209,7 @@ section {
     border-radius: 0px;
     border-color: #000000;
     background-color: #ffffff;
+    margin-bottom: 30px;
 }
 
 #search-results {
@@ -237,6 +233,18 @@ section {
     display: none;
     -ms-overflow-style: none;
     scrollbar-width: none;
+}
+
+input[type="radio"] {
+    margin: 0px 5px 25px 20px;
+}
+
+input[type="radio"]:checked {
+    accent-color: #951010;
+}
+
+.grid {
+    color: white;
 }
 
 footer {

@@ -90,7 +90,7 @@ function prepareData(name_individual, dimensions) {
         // find movie ratings
         ms_id = credit.id;
         person_id = credit.person_id;
-        character = credit.character;
+        role = credit.role;
         result = movies_and_shows.filter(ms => ms.id == ms_id);
         if (result.length == 0) {
             // TODO: maybe avoid this by removing entries in credits as well
@@ -106,7 +106,9 @@ function prepareData(name_individual, dimensions) {
         // find all actors and directors of movie
         result = credits.filter(ms => ms.id == ms_id && ms.person_id != person_id);
         
-        color = getColor((score_imdb / 10.0) * 100);
+        var score_type = $('input[type=radio][name="score_type_network"]').val();
+        var percentage = (((score_type == 'IMDB') ? score_imdb : score_tmdb) / 10.0) * 100;
+        var color = getColor(percentage);
 
         network.push({
             source: name_individual,
@@ -114,7 +116,8 @@ function prepareData(name_individual, dimensions) {
             imdb: score_imdb,
             tmdb: score_tmdb,
             type: color,
-            is_ms: false
+            is_ms: false,
+            role: role
         });
         for (person of result) {
             network.push({
@@ -123,12 +126,24 @@ function prepareData(name_individual, dimensions) {
                 imdb: score_imdb,
                 tmdb: score_tmdb,
                 type: color,
-                is_ms: true
+                is_ms: true,
+                role: 'none'
             });
         }
     }
     
     plotNetwork(network, dimensions);
+
+    // update colors
+    $('input[type=radio][name="score_type_network"]').on('change', function (event, d) {
+        var score_type = $(this).val();
+        for (n of network) {
+            var percentage = (((score_type == 'IMDB') ? n.imdb : n.tmdb) / 10.0) * 100;
+            var color = getColor(percentage);
+            n.type = color;
+        }
+        plotNetwork(network, dimensions);
+    });
 }
 
 function init() {

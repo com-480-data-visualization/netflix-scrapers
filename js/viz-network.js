@@ -1,66 +1,3 @@
-function plotColorMap(dimensions) {
-    // extract parameters
-    width = dimensions.width;
-    height = dimensions.height;
-    
-    width_svg = width + margin.left + margin.right;
-    height_svg = 50;
-
-    $('#viz_color_map').empty();
-    var svg = d3.select('#viz_color_map')
-        .append('svg')
-        .attr('width', width_svg)
-        .attr('height', height_svg);
-
-    var colors = ['red', 'yellow', 'green'];
-    var l = colors.length - 1;
-
-    var linear_gradient = svg.append('defs')
-        .append('linearGradient')
-        .attr('id', 'grad')
-        .attr('x1', '0%')
-        .attr('x2', '100%')
-        .attr('y1', '0%')
-        .attr('y2', '0%');
-
-    linear_gradient.selectAll('stop')
-        .data(colors)
-        .enter()
-        .append('stop')
-        .style('stop-color', function(d) { return d; })
-        .attr('offset', function(d, i) {
-            return 100 * (i / l) + '%';
-        });
-
-    svg.append('rect')
-        .attr('x', 0)
-        .attr('y', 20)
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height_svg)
-        .style('fill', 'url(#grad)');
-
-    svg.append("text")
-        .attr("x", 0)
-        .attr("y", 12)
-        .text('0.0')
-        .style("font-size", "10px")
-        .style("font-weight", "bold");
-    
-    svg.append("text")
-        .attr("x", (width + margin.left + margin.right - 20) / 2)
-        .attr("y", 12)
-        .text('5.0')
-        .style("font-size", "10px")
-        .style("font-weight", "bold");
-
-    svg.append("text")
-        .attr("x", width + margin.left + margin.right - 20)
-        .attr("y", 12)
-        .text('10.0')
-        .style("font-size", "10px")
-        .style("font-weight", "bold");
-}
-
 // inspired by: https://observablehq.com/d/3b363d37f93bd20b
 function plotNetwork(network, dimensions) {
     // extract parameters
@@ -120,22 +57,43 @@ function plotNetwork(network, dimensions) {
                         return d.type;
                     });
     
-    // draw actors as nodes
-    const node = g.append("g")
+    // determine node types and distinguish them with colors
+    const nodesActors = []
+    const nodesMS = []
+    for (n of nodes) {
+        let matches = $.grep(network, function (obj) {
+            return obj.source == n.id;
+        });
+        if (matches.length == 0) {
+            // actor or director
+            nodesActors.push(n);
+            continue;
+        }
+        let first_match = matches[0]
+        if (first_match.is_ms == true) {
+            nodesMS.push(n);
+        } else {
+            nodesActors.push(n);
+        }
+    }
+
+    // draw nodes
+    const nodeActor = g.append("g")
                     .attr("fill", "currentColor")
                     .attr("stroke-linecap", "round")
                     .attr("stroke-linejoin", "round")
                     .selectAll("g")
-                    .data(nodes)
+                    .data(nodesActors)
                     .join("g")
                     .call(drag(simulation));
     
-    node.append("circle")
-        .attr("stroke", "white")
-        .attr("stroke-width", 1.5)
+    nodeActor.append("circle")
+        .attr("fill", "purple")
+        .attr("stroke", 'black')
+        .attr("stroke-width", 1)
         .attr("r", 4);
     
-    node.append("text")
+    nodeActor.append("text")
         .attr("x", 8)
         .attr("y", "0.31em")
         .text(function (d) {
@@ -144,14 +102,41 @@ function plotNetwork(network, dimensions) {
         .clone(true).lower()
         .attr("fill", "none")
         .attr("stroke", "white")
-        .attr("stroke-width", 3);
+        .attr("stroke-width", 1);
+    
+    const nodeMS = g.append("g")
+        .attr("fill", "currentColor")
+        .attr("stroke-linecap", "round")
+        .attr("stroke-linejoin", "round")
+        .selectAll("g")
+        .data(nodesMS)
+        .join("g")
+        .call(drag(simulation));
+
+    nodeMS.append("circle")
+        .attr("fill", "blue")
+        .attr("stroke", 'black')
+        .attr("stroke-width", 1)
+        .attr("r", 4);
+
+    nodeMS.append("text")
+        .attr("x", 8)
+        .attr("y", "0.31em")
+        .text(function (d) {
+        return d.id;
+        })
+        .clone(true).lower()
+        .attr("fill", "none")
+        .attr("stroke", "white")
+        .attr("stroke-width", 1);
     
     simulation.on("tick", () => {
         link.attr("d", function (d) {
             return `M${d.source.x}, ${d.source.y}
                     L${d.target.x}, ${d.target.y}`;
         });
-        node.attr("transform", d => `translate(${d.x}, ${d.y})`);
+        nodeActor.attr("transform", d => `translate(${d.x}, ${d.y})`);
+        nodeMS.attr("transform", d => `translate(${d.x}, ${d.y})`);
     });
 
     // zooming
@@ -160,8 +145,103 @@ function plotNetwork(network, dimensions) {
                 .scaleExtent([0.25, 8])
                 .on("zoom", function ({transform}) {
                     g.attr("transform", transform);
-                }));          
+                }));
+    
+    // color map
+    height_svg = 50;
+    svg = d3.select("#viz_network")
+                .append('svg')
+                .attr('width', width_svg)
+                .attr('height', height_svg);
+        
+    var colors = ['red', 'yellow', 'green'];
+    var l = colors.length - 1;
 
-    plotColorMap(dimensions);
+    var linear_gradient = svg.append('defs')
+        .append('linearGradient')
+        .attr('id', 'grad')
+        .attr('x1', '0%')
+        .attr('x2', '100%')
+        .attr('y1', '0%')
+        .attr('y2', '0%');
+
+    linear_gradient.selectAll('stop')
+        .data(colors)
+        .enter()
+        .append('stop')
+        .style('stop-color', function(d) { return d; })
+        .attr('offset', function(d, i) {
+            return 100 * (i / l) + '%';
+        });
+
+    svg.append('rect')
+        .attr('x', 0)
+        .attr('y', 20)
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height_svg)
+        .style('fill', 'url(#grad)');
+
+    svg.append("text")
+        .attr("x", 0)
+        .attr("y", 15)
+        .text('0.0')
+        .style("font-size", "10px")
+        .style("font-weight", "bold");
+    
+    svg.append("text")
+        .attr("x", (width + margin.left + margin.right - 20) / 2)
+        .attr("y", 15)
+        .text('5.0')
+        .style("font-size", "10px")
+        .style("font-weight", "bold");
+
+    svg.append("text")
+        .attr("x", width + margin.left + margin.right - 20)
+        .attr("y", 15)
+        .text('10.0')
+        .style("font-size", "10px")
+        .style("font-weight", "bold");
+
+    svg.selectAll("text")
+        .attr('fill', 'white');
+    
+    // legend
+    svg = d3.select("#viz_network")
+            .append('svg')
+            .attr('width', width_svg)
+            .attr('height', height_svg);
+    
+    svg.append('circle')
+        .attr("cx", (width + margin.left + margin.right) / 4 - 25)
+        .attr("cy", height_svg / 2)
+        .attr("fill", "blue")
+        .attr("stroke", 'black')
+        .attr("stroke-width", 1)
+        .attr("r", 10);
+
+    svg.append("text")
+        .attr("x", (width + margin.left + margin.right) / 4 - 5)
+        .attr("y", height_svg / 2 + 2)
+        .text('Movie / Show')
+        .style("font-size", "8px")
+        .style("font-weight", "bold");
+
+    svg.append('circle')
+        .attr("cx", 3 * (width + margin.left + margin.right) / 4 - 45)
+        .attr("cy", height_svg / 2)
+        .attr("fill", "purple")
+        .attr("stroke", 'black')
+        .attr("stroke-width", 1)
+        .attr("r", 10);
+
+    svg.append("text")
+        .attr("x", 3 * (width + margin.left + margin.right) / 4 - 25)
+        .attr("y", height_svg / 2 + 2)
+        .text('Actor / Director')
+        .style("font-size", "8px")
+        .style("font-weight", "bold");
+
+    svg.selectAll("text")
+        .attr('fill', 'white');
 }
 

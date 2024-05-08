@@ -128,7 +128,7 @@ function plotScoresPerYear(scores, dimensions) {
     
 
     // display mean line
-    var value = $("#score_type").val();
+    var value = $('input[type=radio][name="score_type_linechart"]').val().toLowerCase();
 
     // overall mean
     const line_generator = d3.line()
@@ -152,7 +152,7 @@ function plotScoresPerYear(scores, dimensions) {
                     .attr("d", d3.line()
                         .x(d => x(d.year))
                         .y(d => y(d[value])))
-                    .attr("stroke", "black")
+                    .attr("stroke", "purple")
                     .style("stroke-width", 5)
                     .style("fill", "none");
     
@@ -184,9 +184,9 @@ function plotScoresPerYear(scores, dimensions) {
                             .style("stroke-width", 2);
     
     // update graph based on score type
-    d3.select('#score_type').on('change', function (event, d) {
-        value = $("#score_type").val()
-
+    $('input[type=radio][name="score_type_linechart"]').on('change', function (event, d) {
+        value = $(this).val().toLowerCase();
+        
         mean_line.transition()
             .duration(duration_animation)
             .attr("d", line_generator([
@@ -213,4 +213,64 @@ function plotScoresPerYear(scores, dimensions) {
                 .attr("cx", d => x(d.year))
                 .attr("cy", d => y(d[value]));
     });
+
+    svg.selectAll("text")
+        .attr('fill', 'white');
+
+    // legend
+    var height_svg = 100;
+    svg = d3.select("#viz_scores_per_year")
+        .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height_svg);
+
+    svg.append('circle')
+        .attr("cx", (width + margin.left + margin.right) / 4 - 17)
+        .attr("cy", height_svg / 3)
+        .attr("r", 10)
+        .style("fill", "#00d4c6")
+        .style("stroke", "black") 
+        .style("stroke-width", 2);
+
+    svg.append("text")
+        .attr("x", (width + margin.left + margin.right) / 4)
+        .attr("y", height_svg / 3 + 2)
+        .text('Movie / Show')
+        .style("font-size", "8px")
+        .style("font-weight", "bold");
+
+    svg.append('circle')
+        .attr("cx", 3 * (width + margin.left + margin.right) / 4 - 65)
+        .attr("cy", height_svg / 3)
+        .attr("r", 5)
+        .style("fill", "red")
+        .style("stroke", "black") 
+        .style("stroke-width", 2);
+
+    svg.append("text")
+        .attr("x", 3 * (width + margin.left + margin.right) / 4 - 45)
+        .attr("y", height_svg / 3 + 2)
+        .text('Mean Score (Year X)')
+        .style("font-size", "8px")
+        .style("font-weight", "bold");
+    
+    svg.append("line")
+        .attr("x1", (width + margin.left + margin.right) / 2 - 75)
+        .attr("y1", 2 * height_svg / 3)
+        .attr("x2", (width + margin.left + margin.right) / 2 - 25)
+        .attr("y2", 2 * height_svg / 3)
+        .attr('stroke', '#fa712d')
+        .attr('stroke-width', 3)
+        .attr('fill', 'none')
+        .attr('stroke-dasharray', '10,10');
+
+    svg.append("text")
+        .attr("x", (width + margin.left + margin.right) / 2 - 5)
+        .attr("y", 2 * height_svg / 3 + 2)
+        .text('Overall Mean Score')
+        .style("font-size", "8px")
+        .style("font-weight", "bold");
+
+    svg.selectAll("text")
+        .attr('fill', 'white');
 }
