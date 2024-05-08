@@ -174,7 +174,8 @@ function init() {
         }
     })
 
-    $('#individual').bind("enterKey",function(e){
+    $('#individual').bind("enterKey",function(e) {
+        $('#search-results').html('');
         name_individual = $('#individual').val()
         result = credits.filter(object => object.name == name_individual);
 
@@ -184,7 +185,6 @@ function init() {
         }
         dimensions = getWindowData();
         prepareData(name_individual, dimensions);
-
     });
     $('#individual').keyup(function(e){
         if(e.keyCode == 13)

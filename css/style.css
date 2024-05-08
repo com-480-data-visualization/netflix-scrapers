@@ -221,8 +221,10 @@ section {
     overflow: scroll;
     list-style-type: none;
     background-color: #ffffff;
+    color: black;
     width: 50%;
     font-size: 12px;
+    margin-top: -30px;
 }
 
 #search-results a {
