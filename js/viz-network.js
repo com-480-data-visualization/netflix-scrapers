@@ -18,11 +18,12 @@ function plotNetwork(network, dimensions) {
     
     // simulate actor network
     const simulation = d3.forceSimulation(nodes)
-                            .force("link", d3.forceLink(links).id(d => d.id))
+                            .force("link", d3.forceLink(links).id(d => d.id).distance(function (d) {
+                                return (d.is_ms) ? 150 : 200;
+                            }))
                             .force("charge", d3.forceManyBody().strength(-400))
                             .force("x", d3.forceX())
                             .force("y", d3.forceY());
-    
 
     drag = simulation => {
         return d3.drag()
@@ -88,10 +89,10 @@ function plotNetwork(network, dimensions) {
                     .call(drag(simulation));
     
     nodeActor.append("circle")
-        .attr("fill", "purple")
+        .attr("fill", "blue")
         .attr("stroke", 'black')
         .attr("stroke-width", 1)
-        .attr("r", 4);
+        .attr("r", 5);
     
     nodeActor.append("text")
         .attr("x", 8)
@@ -99,11 +100,23 @@ function plotNetwork(network, dimensions) {
         .text(function (d) {
             return d.id;
         })
-        .clone(true).lower()
-        .attr("fill", "none")
-        .attr("stroke", "white")
-        .attr("stroke-width", 1);
-    
+        .attr("color", "white")
+        .style("font-weight", "bold")
+        .style("visibility", "hidden");
+
+    nodeActor.on("click", function(d)
+    {
+        d3.select(this).select("text").style("visibility", "visible") 
+    })
+    nodeActor.on("mouseover", function(d)
+    {
+        d3.select(this).select("text").style("visibility", "visible") 
+    })
+    .on("mouseout", function(d)
+    {
+        d3.select(this).select("text").style("visibility", "hidden") 
+    });
+
     const nodeMS = g.append("g")
         .attr("fill", "currentColor")
         .attr("stroke-linecap", "round")
@@ -114,21 +127,19 @@ function plotNetwork(network, dimensions) {
         .call(drag(simulation));
 
     nodeMS.append("circle")
-        .attr("fill", "blue")
+        .attr("fill", "purple")
         .attr("stroke", 'black')
         .attr("stroke-width", 1)
-        .attr("r", 4);
+        .attr("r", 10);
 
     nodeMS.append("text")
-        .attr("x", 8)
+        .attr("x", 12)
         .attr("y", "0.31em")
         .text(function (d) {
         return d.id;
         })
-        .clone(true).lower()
-        .attr("fill", "none")
-        .attr("stroke", "white")
-        .attr("stroke-width", 1);
+        .attr("color", "white")
+        .style("font-weight", "bold");
     
     simulation.on("tick", () => {
         link.attr("d", function (d) {
@@ -146,7 +157,7 @@ function plotNetwork(network, dimensions) {
                 .on("zoom", function ({transform}) {
                     g.attr("transform", transform);
                 }));
-    
+
     // color map
     height_svg = 50;
     svg = d3.select("#viz_network")
@@ -214,7 +225,7 @@ function plotNetwork(network, dimensions) {
     svg.append('circle')
         .attr("cx", (width + margin.left + margin.right) / 4 - 25)
         .attr("cy", height_svg / 2)
-        .attr("fill", "blue")
+        .attr("fill", "purple")
         .attr("stroke", 'black')
         .attr("stroke-width", 1)
         .attr("r", 10);
@@ -229,7 +240,7 @@ function plotNetwork(network, dimensions) {
     svg.append('circle')
         .attr("cx", 3 * (width + margin.left + margin.right) / 4 - 45)
         .attr("cy", height_svg / 2)
-        .attr("fill", "purple")
+        .attr("fill", "blue")
         .attr("stroke", 'black')
         .attr("stroke-width", 1)
         .attr("r", 10);
