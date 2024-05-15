@@ -19,7 +19,6 @@ html {
     overflow-x: hidden;
 }
 
-
 section {
     min-height: 100vh;
     display: flex;
@@ -74,6 +73,12 @@ section {
 }
 
 #viz_network {
+    display: block;
+    text-align: center;
+    margin: auto;
+}
+
+#world_map {
     display: block;
     text-align: center;
     margin: auto;

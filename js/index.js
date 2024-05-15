@@ -146,6 +146,102 @@ function prepareData(name_individual, dimensions) {
     });
 }
 
+function prepareCountry(country_iso) {
+    credits_filtered = credits.filter(credit => credit.iso = country_iso);
+
+    // get number of actors and number of directors for the given country
+    actors = credits_filtered.filter(credit => credit.role == 'ACTOR');
+    directors = credits_filtered.filter(credit => credit.role == 'DIRECTOR');
+
+    counts = {
+        actors: actors.length,
+        directors: directors.length
+    };
+
+    // get scores
+    scores_per_year = [];
+    for (credit of credits_filtered) {
+        ms_id = credit.id;
+        result = movies_and_shows.filter(ms => ms.id == ms_id);
+        if (result.length == 0) {
+            console.log('Movie with id ' + ms_id + ' doesn\'t have IMDB/TMDB scores. Skipping ...');
+            continue;
+        }
+        ms = result[0];
+        score_imdb = parseFloat(ms.imdb_score);
+        score_tmdb = parseFloat(ms.tmdb_score);
+        year = parseInt(ms.release_year);
+        scores_per_year.push({
+            imdb: score_imdb,
+            tmdb: score_tmdb,
+            year: year,
+            title: ms.title,
+            description: ms.description,
+            type: (ms.type == 'MOVIE') ? 'Movie' : 'Show',
+            age_certification: ms.age_certification,
+            runtime: ms.runtime
+        });
+    }
+
+    // get mean scores
+    years = new Set(scores_per_year.map(object => object['year']));
+    mean_scores_per_year = [];
+    for (year of years) {
+        scores = scores_per_year.filter(object => object.year == year);
+        l = scores.length;
+        mean_score_imdb = scores.reduce((acc, curr) => acc + curr.imdb, 0) / l;
+        mean_score_tmdb = scores.reduce((acc, curr) => acc + curr.tmdb, 0) / l;
+        mean_scores_per_year.push({
+            imdb: mean_score_imdb,
+            tmdb: mean_score_tmdb,
+            year: year
+        });
+    }
+
+    // sort before plotting
+    scores_per_year.sort((a, b) => a.year - b.year);
+    mean_scores_per_year.sort((a, b) => a.year - b.year);
+    l = mean_scores_per_year.length;
+    mean_scores = {
+        imdb: mean_scores_per_year.reduce((acc, curr) => acc + curr.imdb, 0) / l,
+        tmdb: mean_scores_per_year.reduce((acc, curr) => acc + curr.tmdb, 0) / l
+    };
+    scores = {
+        scores_per_year: scores_per_year,
+        mean_scores_per_year: mean_scores_per_year,
+        mean_scores: mean_scores
+    };
+
+    return {counts: counts, mean_scores_per_year: mean_scores_per_year, scores: scores};
+}
+
+function prepareMap(dimensions) {
+
+    // Filter credits to keep values where iso is not null
+    credits_filtered = credits.filter(credit => credit.iso != null);
+
+    // Get the set of unique iso values
+    iso_set = new Set(credits_filtered.map(credit => credit.iso));
+
+    // Get the counts of actors and directors per country
+    counts_per_country = new Map();
+
+    for (iso of iso_set) {
+        country_info = prepareCountry(iso);
+        mean_score_imdb = mean_scores_per_year.reduce((acc, curr) => acc + curr.imdb, 0) / mean_scores_per_year.length;
+        mean_score_tmdb = mean_scores_per_year.reduce((acc, curr) => acc + curr.tmdb, 0) / mean_scores_per_year.length;
+        counts_per_country.set(iso, {
+            actors: country_info.counts.actors,
+            directors: country_info.counts.directors,
+            mean_score_imdb: country_info.mean_score_imdb,
+            mean_score_tmdb: country_info.mean_score_tmdb
+        });
+    }
+
+    // Create the map
+    worldMap(counts_per_country, dimensions);
+}
+
 function init() {
     // load data // TODO: maybe read with d3.csv()
     $.ajax({
@@ -162,7 +258,7 @@ function init() {
     })
 
     $.ajax({
-        url: 'data/credits.csv',
+        url: 'data/new_credits.csv',
         async: false,
         success: function (csvd) {
             credits = $.csv.toObjects(csvd);
@@ -201,6 +297,9 @@ function init() {
     $('#individual').val(name_individual);
     dimensions = getWindowData();
     prepareData(name_individual, dimensions);
+
+    // Display the map
+    worldMap(null, dimensions);
 }
 
 function getWindowData() {
@@ -245,4 +344,5 @@ window.onresize = () => {
     name_individual = $('#individual').val();
     dimensions = getWindowData();
     prepareData(name_individual, dimensions);
+    worldMap(null, dimensions);
 };
