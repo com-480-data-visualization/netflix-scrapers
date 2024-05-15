@@ -14,9 +14,9 @@ function worldMap(dataCounts, dimensions) {
     // Map and projection
     const path = d3.geoPath();
     const projection = d3.geoNaturalEarth1()
-        .scale(width / 6)
+        .scale(width_svg / 6)
         .center([0,20])
-        .translate([width / 2, height / 2]);
+        .translate([width_svg / 2, height_svg / 2]);
 
     // Data and color scale
     const data = new Map();
