@@ -147,16 +147,21 @@ function prepareData(name_individual, dimensions) {
 }
 
 function retrieveIndividual(name) {
-    individual = groupedby_pid_credits.filter(obj => obj.name == name)[0];
+    groupedby_pid_credits_filtered = groupedby_pid_credits.filter(obj => obj.name == name);
+    const individual = groupedby_pid_credits_filtered[0];
+    if (individual.iso == "") {
+        console.log('No birthplace found for "' + name + '".');
+        person = {name: name, place: null, position: {lat: null, long: null}};
+    } else {
+        const string_latlong = individual.latlong;
+        // Remove parenthese, split by comma & retrieve the floats
+        const split = string_latlong.substring(1, string_latlong.length - 1).split(",");
+        const lat = parseFloat(split[0]);
+        const long = parseFloat(split[1]);
+        const place = individual.state == "" ? `${individual.city}, ${individual.country}` : `${individual.city}, ${individual.state}, ${individual.country}`;
 
-    const string_latlong = individual.latlong;
-    // Remove parenthese, split by comma & retrieve the floats
-    const split = string_latlong.substring(1, string_latlong.length - 1).split(",");
-    const lat = parseFloat(split[0]);
-    const long = parseFloat(split[1]);
-    const place = individual.state == "" ? `${individual.city}, ${individual.country}` : `${individual.city}, ${individual.state}, ${individual.country}`;
-
-    const person = {name: individual.name, place: place, position: {lat: lat, long: long}};
+        person = {name: individual.name, place: place, position: {lat: lat, long: long}};
+    }
 
     return person;
 }
@@ -270,7 +275,8 @@ function init() {
 
     // default value
     $('#search-results').html('');
-    name_individual = 'Kareena Kapoor Khan';
+    //name_individual = 'Kareena Kapoor Khan';
+    name_individual = 'Belinda Beatty';
     $('#individual').val(name_individual);
     dimensions = getWindowData();
     prepareData(name_individual, dimensions);

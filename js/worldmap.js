@@ -32,9 +32,6 @@ function worldMap(counts, person, dimensions) {
         .domain([1, max])
         .range(["white", "red"]);
 
-    // Convert latitude and longitude to SVG coordinates
-    const [x, y] = projection([person.position.long, person.position.lat]);
-
     // tooltips
     var tooltip = d3.select('#world_map')
         .append('div')
@@ -140,16 +137,28 @@ function worldMap(counts, person, dimensions) {
                 hideTooltip(event, d);
             });
 
-        // Add a circle for the place of birth of the actor/director
-        svg.append("circle")
-            .attr("cx", x)
-            .attr("cy", y)
-            .attr("r", 5)
-            .style("fill", "#FFFF00")
-            .on("mouseover", showTooltipPoint)
-            .on("mousemove", moveTooltip)
-            .on("mouseleave", hideTooltip)
-            .classed("blinking", true);
-
+        if (person.place != null) {
+            // Convert latitude and longitude to SVG coordinates
+            const [x, y] = projection([person.position.long, person.position.lat]);
+            // Add a circle for the place of birth of the actor/director
+            svg.append("circle")
+                .attr("cx", x)
+                .attr("cy", y)
+                .attr("r", 5)
+                .style("fill", "#FFFF00")
+                .on("mouseover", showTooltipPoint)
+                .on("mousemove", moveTooltip)
+                .on("mouseleave", hideTooltip)
+                .classed("blinking", true);
+        } else {
+            // Display a message that the birthplace was not found
+            var alertText = svg.append("text")
+                .attr("x", width_svg / 2)
+                .attr("y", 0.1 * height_svg)
+                .attr("text-anchor", "middle")
+                .attr("fill", "white")
+                .style("font-style", "italic")
+                .text("Birthplace not found.");
+        }
     })
 }
