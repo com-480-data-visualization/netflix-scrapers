@@ -254,6 +254,17 @@ input[type="radio"]:checked {
     color: white;
 }
 
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.blinking {
+    animation: blink 2s linear infinite;
+}
+
+
 footer {
     font-size: 11px;
     background-color: #2a0808;

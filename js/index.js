@@ -10,7 +10,7 @@ function animateMenuIcon(bars) {
 function addNavListeners() {
     var links = document.getElementsByClassName("nav-link");
     for (link of links) {
-        link.addEventListener("click", function() {
+        link.addEventListener("click", function () {
             var current = document.getElementsByClassName("active");
             current[0].className = current[0].className.replace(" active", "");
             this.className += " active";
@@ -28,135 +28,6 @@ function prepareData(name_individual, dimensions) {
     height = dimensions.height;
 
     credits_filtered = credits.filter(credit => credit.name == name_individual);
-
-    // get scores
-    scores_per_year = [];
-    for (credit of credits_filtered) {
-        ms_id = credit.id;
-        result = movies_and_shows.filter(ms => ms.id == ms_id);
-        if (result.length == 0) {
-            console.log('Movie with id ' + ms_id + ' doesn\'t have IMDB/TMDB scores. Skipping ...');
-            continue;
-        }
-        ms = result[0];
-        score_imdb = parseFloat(ms.imdb_score);
-        score_tmdb = parseFloat(ms.tmdb_score);
-        year = parseInt(ms.release_year);
-        scores_per_year.push({
-            imdb: score_imdb, 
-            tmdb: score_tmdb, 
-            year: year,
-            title: ms.title,
-            description: ms.description,
-            type: (ms.type == 'MOVIE') ? 'Movie' : 'Show',
-            age_certification: ms.age_certification,
-            runtime: ms.runtime
-        });
-    }
-
-    // get mean scores
-    years = new Set(scores_per_year.map(object => object['year']));
-    mean_scores_per_year = [];
-    for (year of years) {
-        scores = scores_per_year.filter(object => object.year == year);
-        l = scores.length;
-        mean_score_imdb = scores.reduce((acc, curr) => acc + curr.imdb, 0) / l;
-        mean_score_tmdb = scores.reduce((acc, curr) => acc + curr.tmdb, 0) / l;
-        mean_scores_per_year.push({
-            imdb: mean_score_imdb, 
-            tmdb: mean_score_tmdb, 
-            year: year
-        });
-    }
-
-    // sort before plotting
-    scores_per_year.sort((a, b) => a.year - b.year);
-    mean_scores_per_year.sort((a, b) => a.year - b.year);
-    l = mean_scores_per_year.length;
-    mean_scores = {
-        imdb: mean_scores_per_year.reduce((acc, curr) => acc + curr.imdb, 0) / l,
-        tmdb: mean_scores_per_year.reduce((acc, curr) => acc + curr.tmdb, 0) / l
-    };
-    scores = {
-        scores_per_year: scores_per_year,
-        mean_scores_per_year: mean_scores_per_year,
-        mean_scores: mean_scores
-    };
-    plotScoresPerYear(scores, dimensions);
-
-    network = [];
-    
-    for (credit of credits_filtered) {
-        // find movie ratings
-        ms_id = credit.id;
-        person_id = credit.person_id;
-        role = credit.role;
-        result = movies_and_shows.filter(ms => ms.id == ms_id);
-        if (result.length == 0) {
-            // TODO: maybe avoid this by removing entries in credits as well
-            console.log('Movie with id ' + ms_id + ' doesn\'t have IMDB/TMDB scores. Skipping ...');
-            continue;
-        }
-        ms = result[0];
-        title = ms.title;
-        score_imdb = parseFloat(ms.imdb_score);
-        score_tmdb = parseFloat(ms.tmdb_score);
-
-
-        // find all actors and directors of movie
-        result = credits.filter(ms => ms.id == ms_id && ms.person_id != person_id);
-        
-        var score_type = $('input[type=radio][name="score_type_network"]').val();
-        var percentage = (((score_type == 'IMDB') ? score_imdb : score_tmdb) / 10.0) * 100;
-        var color = getColor(percentage);
-
-        network.push({
-            source: name_individual,
-            target: title,
-            imdb: score_imdb,
-            tmdb: score_tmdb,
-            type: color,
-            is_ms: false,
-            role: role
-        });
-        for (person of result) {
-            network.push({
-                source: title,
-                target: person.name,
-                imdb: score_imdb,
-                tmdb: score_tmdb,
-                type: color,
-                is_ms: true,
-                role: 'none'
-            });
-        }
-    }
-    
-    plotNetwork(network, dimensions);
-
-    // update colors
-    $('input[type=radio][name="score_type_network"]').on('change', function (event, d) {
-        var score_type = $(this).val();
-        for (n of network) {
-            var percentage = (((score_type == 'IMDB') ? n.imdb : n.tmdb) / 10.0) * 100;
-            var color = getColor(percentage);
-            n.type = color;
-        }
-        plotNetwork(network, dimensions);
-    });
-}
-
-function prepareCountry(country_iso) {
-    credits_filtered = credits.filter(credit => credit.iso = country_iso);
-
-    // get number of actors and number of directors for the given country
-    actors = credits_filtered.filter(credit => credit.role == 'ACTOR');
-    directors = credits_filtered.filter(credit => credit.role == 'DIRECTOR');
-
-    counts = {
-        actors: actors.length,
-        directors: directors.length
-    };
 
     // get scores
     scores_per_year = [];
@@ -211,35 +82,102 @@ function prepareCountry(country_iso) {
         mean_scores_per_year: mean_scores_per_year,
         mean_scores: mean_scores
     };
+    plotScoresPerYear(scores, dimensions);
 
-    return {counts: counts, mean_scores_per_year: mean_scores_per_year, scores: scores};
+    network = [];
+
+    for (credit of credits_filtered) {
+        // find movie ratings
+        ms_id = credit.id;
+        person_id = credit.person_id;
+        role = credit.role;
+        result = movies_and_shows.filter(ms => ms.id == ms_id);
+        if (result.length == 0) {
+            // TODO: maybe avoid this by removing entries in credits as well
+            console.log('Movie with id ' + ms_id + ' doesn\'t have IMDB/TMDB scores. Skipping ...');
+            continue;
+        }
+        ms = result[0];
+        title = ms.title;
+        score_imdb = parseFloat(ms.imdb_score);
+        score_tmdb = parseFloat(ms.tmdb_score);
+
+
+        // find all actors and directors of movie
+        result = credits.filter(ms => ms.id == ms_id && ms.person_id != person_id);
+
+        var score_type = $('input[type=radio][name="score_type_network"]').val();
+        var percentage = (((score_type == 'IMDB') ? score_imdb : score_tmdb) / 10.0) * 100;
+        var color = getColor(percentage);
+
+        network.push({
+            source: name_individual,
+            target: title,
+            imdb: score_imdb,
+            tmdb: score_tmdb,
+            type: color,
+            is_ms: false,
+            role: role
+        });
+        for (person of result) {
+            network.push({
+                source: title,
+                target: person.name,
+                imdb: score_imdb,
+                tmdb: score_tmdb,
+                type: color,
+                is_ms: true,
+                role: 'none'
+            });
+        }
+    }
+
+    plotNetwork(network, dimensions);
+
+    // update colors
+    $('input[type=radio][name="score_type_network"]').on('change', function (event, d) {
+        var score_type = $(this).val();
+        for (n of network) {
+            var percentage = (((score_type == 'IMDB') ? n.imdb : n.tmdb) / 10.0) * 100;
+            var color = getColor(percentage);
+            n.type = color;
+        }
+        plotNetwork(network, dimensions);
+    });
 }
 
-function prepareMap(dimensions) {
+function retrieveIndividual(name) {
+    individual = groupedby_pid_credits.filter(obj => obj.name == name)[0];
 
-    // Filter credits to keep values where iso is not null
-    credits_filtered = credits.filter(credit => credit.iso != null);
+    const string_latlong = individual.latlong;
+    // Remove parenthese, split by comma & retrieve the floats
+    const split = string_latlong.substring(1, string_latlong.length - 1).split(",");
+    const lat = parseFloat(split[0]);
+    const long = parseFloat(split[1]);
+    const place = individual.state == "" ? `${individual.city}, ${individual.country}` : `${individual.city}, ${individual.state}, ${individual.country}`;
 
-    // Get the set of unique iso values
-    iso_set = new Set(credits_filtered.map(credit => credit.iso));
+    const person = {name: individual.name, place: place, position: {lat: lat, long: long}};
+
+    return person;
+}
+function prepareMap(name_individual, dimensions) {
 
     // Get the counts of actors and directors per country
     counts_per_country = new Map();
-
-    for (iso of iso_set) {
-        country_info = prepareCountry(iso);
-        mean_score_imdb = mean_scores_per_year.reduce((acc, curr) => acc + curr.imdb, 0) / mean_scores_per_year.length;
-        mean_score_tmdb = mean_scores_per_year.reduce((acc, curr) => acc + curr.tmdb, 0) / mean_scores_per_year.length;
-        counts_per_country.set(iso, {
-            actors: country_info.counts.actors,
-            directors: country_info.counts.directors,
-            mean_score_imdb: country_info.mean_score_imdb,
-            mean_score_tmdb: country_info.mean_score_tmdb
-        });
+    for (count of actor_director_counts_per_iso) {
+        iso = count.iso;
+        country_info = {
+            actors: count.actor_count,
+            directors: count.director_count
+        };
+        counts_per_country.set(iso, country_info);
+        //console.log(`Country ${iso} has counts ${country_info.actors} actors and ${country_info.directors} directors.`);
     }
 
+    const person = retrieveIndividual(name_individual)
+
     // Create the map
-    worldMap(counts_per_country, dimensions);
+    worldMap(counts_per_country, person, dimensions);
 }
 
 function init() {
@@ -249,7 +187,7 @@ function init() {
         async: false,
         success: function (csvd) {
             // entries must have IMDB and TMDB ratings // TODO: mandatory?
-            movies_and_shows = $.csv.toObjects(csvd).filter(obj => obj['imdb_score'] != '' && obj['tmdb_score'] != '' );
+            movies_and_shows = $.csv.toObjects(csvd).filter(obj => obj['imdb_score'] != '' && obj['tmdb_score'] != '');
         },
         dataType: "text",
         complete: function () {
@@ -258,7 +196,7 @@ function init() {
     })
 
     $.ajax({
-        url: 'data/new_credits.csv',
+        url: 'data/credits.csv',
         async: false,
         success: function (csvd) {
             credits = $.csv.toObjects(csvd);
@@ -270,7 +208,31 @@ function init() {
         }
     })
 
-    $('#individual').bind("enterKey",function(e) {
+    $.ajax({
+        url: 'data/groupedby_pid_credits.csv',
+        async: false,
+        success: function (csvd) {
+            groupedby_pid_credits = $.csv.toObjects(csvd);
+        },
+        dataType: "text",
+        complete: function () {
+            console.log('Loaded groupedby_pid_credits successfully.');
+        }
+    })
+
+    $.ajax({
+        url: 'data/actor_director_counts_per_iso.csv',
+        async: false,
+        success: function (csvd) {
+            actor_director_counts_per_iso = $.csv.toObjects(csvd);
+        },
+        dataType: "text",
+        complete: function () {
+            console.log('Loaded credits actor_director_counts_per_iso successfully.');
+        }
+    })
+
+    $('#individual').bind("enterKey", function (e) {
         $('#search-results').html('');
         name_individual = $('#individual').val()
         result = credits.filter(object => object.name == name_individual);
@@ -282,9 +244,8 @@ function init() {
         dimensions = getWindowData();
         prepareData(name_individual, dimensions);
     });
-    $('#individual').keyup(function(e){
-        if(e.keyCode == 13)
-        {
+    $('#individual').keyup(function (e) {
+        if (e.keyCode == 13) {
             $(this).trigger("enterKey");
         }
     });
@@ -299,7 +260,7 @@ function init() {
     prepareData(name_individual, dimensions);
 
     // Display the map
-    worldMap(null, dimensions);
+    prepareMap(name_individual, dimensions);
 }
 
 function getWindowData() {
@@ -315,6 +276,7 @@ function selectName(name) {
     $('#individual').val(name);
     dimensions = getWindowData();
     prepareData(name, dimensions);
+    prepareMap(name, dimensions);
 }
 
 function autocompleteSearch(input) {
@@ -344,5 +306,5 @@ window.onresize = () => {
     name_individual = $('#individual').val();
     dimensions = getWindowData();
     prepareData(name_individual, dimensions);
-    worldMap(null, dimensions);
+    prepareMap(name_individual, dimensions);
 };
