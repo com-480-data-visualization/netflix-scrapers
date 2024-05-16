@@ -76,8 +76,10 @@ function worldMap(counts, person, dimensions) {
             text = 'Country: ' + d.properties.name + '<br>';
             info = counts.get(d.id);
             if (info != undefined) {
-                text += 'Actors: ' + counts.get(d.id).actors + '<br>';
-                text += 'Directors: ' + counts.get(d.id).directors + '<br>';
+                text += 'Actors: ' + info.actors + '<br>';
+                text += 'Directors: ' + info.directors + '<br>';
+                text += 'Mean IMDB: ' + info.imdb + '<br>';
+                text += 'Mean TMDB: ' + info.tmdb + '<br>';
             }
             tooltip.style("opacity", 1)
                 .html(text)

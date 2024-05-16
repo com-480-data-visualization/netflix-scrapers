@@ -171,9 +171,13 @@ function prepareMap(name_individual, dimensions) {
     counts_per_country = new Map();
     for (count of actor_director_counts_per_iso) {
         iso = count.iso;
+        scores = country_scores.find(o => o.iso == iso);
+
         country_info = {
             actors: count.actor_count,
-            directors: count.director_count
+            directors: count.director_count,
+            imdb: scores.mean_imdb,
+            tmdb: scores.mean_tmdb
         };
         counts_per_country.set(iso, country_info);
         //console.log(`Country ${iso} has counts ${country_info.actors} actors and ${country_info.directors} directors.`);
@@ -234,6 +238,18 @@ function init() {
         dataType: "text",
         complete: function () {
             console.log('Loaded credits actor_director_counts_per_iso successfully.');
+        }
+    })
+
+    $.ajax({
+        url: 'data/country_scores.csv',
+        async: false,
+        success: function (csvd) {
+            country_scores = $.csv.toObjects(csvd);
+        },
+        dataType: "text",
+        complete: function () {
+            console.log('Loaded country scores successfully.');
         }
     })
 
