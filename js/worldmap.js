@@ -108,57 +108,98 @@ function worldMap(counts, person, dimensions) {
                 .style("opacity", 0);
         }
 
-        // Draw the map
-        svg.append("g")
-            .selectAll("path")
-            .data(topo.features)
-            .enter()
-            .append("path")
-            // draw each country
-            .attr("d", path)
-            // set the color of each country
-            .attr("fill", function (d) {
-                if (d.id == "USA") return "#8f0000";
-                d.total = data.get(d.id) || 0;
-                return colorScale(d.total);
+        let drawCountry = function (name) {
+            console.log("Want to draw: " + name);
+            // Filter data to only keep the country of interest
+            data.features = topo.features.filter(d => {
+                return d.properties.name == name
             })
-            .style("stroke", "transparent")
-            .attr("class", function (d) {
-                return "Country"
-            })
-            .style("opacity", .8)
-            .on("mouseover", function (event, d) {
-                mouseOver(event.target);
-                showTooltipCountry(event, d);
-            })
-            .on("mousemove", moveTooltip)
-            .on("mouseleave", function (event, d) {
+
+            // Remove the map
+            svg.selectAll("path").remove();
+            svg.selectAll("circle").remove();
+
+            // Set projection
+            var countryProjection = d3.geoMercator()
+                .center([2, 47])                  // GPS of location to zoom on
+                .scale(980)                       // This is like the zoom
+                .translate([width_svg / 2, height_svg / 2])
+
+            // Draw the country
+            svg.append("g")
+                .selectAll("path")
+                .data(data.features)
+                .enter()
+                .append("path")
+                .attr("fill", "grey")
+                .attr("d", d3.geoPath()
+                    .projection(countryProjection))
+                .style("stroke", "none")
+                .on("click", drawMap)
+        }
+
+        let drawMap = function () {
+            // Remove the map
+            svg.selectAll("path").remove();
+            svg.selectAll("circle").remove();
+
+            // Draw the map
+            svg.append("g")
+                .selectAll("path")
+                .data(topo.features)
+                .enter()
+                .append("path")
+                // draw each country
+                .attr("d", path)
+                // set the color of each country
+                .attr("fill", function (d) {
+                    if (d.id == "USA") return "#8f0000";
+                    d.total = data.get(d.id) || 0;
+                    return colorScale(d.total);
+                })
+                .style("stroke", "transparent")
+                .attr("class", function (d) {
+                    return "Country"
+                })
+                .style("opacity", .8)
+                .on("mouseover", function (event, d) {
+                    mouseOver(event.target);
+                    showTooltipCountry(event, d);
+                }).on("click", function (event, d) {
+                drawCountry(d.properties.name);
                 mouseLeave(event.target);
                 hideTooltip(event, d);
-            });
+            }).on("mousemove", moveTooltip)
+                .on("mouseleave", function (event, d) {
+                    mouseLeave(event.target);
+                    hideTooltip(event, d);
+                });
 
-        if (person.place != null) {
-            // Convert latitude and longitude to SVG coordinates
-            const [x, y] = projection([person.position.long, person.position.lat]);
-            // Add a circle for the place of birth of the actor/director
-            svg.append("circle")
-                .attr("cx", x)
-                .attr("cy", y)
-                .attr("r", 5)
-                .style("fill", "#FFFF00")
-                .on("mouseover", showTooltipPoint)
-                .on("mousemove", moveTooltip)
-                .on("mouseleave", hideTooltip)
-                .classed("blinking", true);
-        } else {
-            // Display a message that the birthplace was not found
-            var alertText = svg.append("text")
-                .attr("x", width_svg / 2)
-                .attr("y", 0.1 * height_svg)
-                .attr("text-anchor", "middle")
-                .attr("fill", "white")
-                .style("font-style", "italic")
-                .text("Birthplace not found.");
+            if (person.place != null) {
+                // Convert latitude and longitude to SVG coordinates
+                const [x, y] = projection([person.position.long, person.position.lat]);
+                // Add a circle for the place of birth of the actor/director
+                svg.append("circle")
+                    .attr("cx", x)
+                    .attr("cy", y)
+                    .attr("r", 5)
+                    .style("fill", "#FFFF00")
+                    .on("mouseover", showTooltipPoint)
+                    .on("mousemove", moveTooltip)
+                    .on("mouseleave", hideTooltip)
+                    .classed("blinking", true);
+            } else {
+                // Display a message that the birthplace was not found
+                var alertText = svg.append("text")
+                    .attr("x", width_svg / 2)
+                    .attr("y", 0.1 * height_svg)
+                    .attr("text-anchor", "middle")
+                    .attr("fill", "white")
+                    .style("font-style", "italic")
+                    .text("Birthplace not found.");
+            }
         }
+
+        drawMap();
     })
 }
