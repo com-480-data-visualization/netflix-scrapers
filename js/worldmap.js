@@ -76,7 +76,7 @@ function worldMap(counts, person, dimensions) {
 
         var showTooltipCountry = function (event, d) {
             tooltip.transition().duration(duration_tooltip);
-            text = 'Country: ' + d.properties.name + '<br>';
+            text = '<span class="tooltip-header">Country: ' + d.properties.name + '</span><br>';
             info = counts.get(d.id);
             if (info != undefined) {
                 text += 'Actors: ' + info.actors + '<br>';

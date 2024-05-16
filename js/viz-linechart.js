@@ -107,7 +107,7 @@ function plotScoresPerYear(scores, dimensions) {
                         .style('width', '250px');
     var showTooltip = function (event, d) {
         tooltip.transition().duration(duration_tooltip);
-        text = 'Title: ' + d.title + ' (Rated: ' + ((d.age_certification != '') ? d.age_certification : '-') + ')<br>';
+        text = '<span class="tooltip-header">' + d.title + '</span> (Rated: ' + ((d.age_certification != '') ? d.age_certification : '-') + ')<br>';
         text += 'Runtime: ' + d.runtime + ' min.<br>';
         text += 'Description: ' + d.description;
         tooltip.style("opacity", 1)

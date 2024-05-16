@@ -84,6 +84,10 @@ section {
     margin: auto;
 }
 
+.tooltip-header {
+    font-weight: bolder;
+}
+
 
 .one {
     background-color: #2a0808;
