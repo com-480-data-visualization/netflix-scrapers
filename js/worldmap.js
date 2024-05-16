@@ -11,11 +11,13 @@ function worldMap(counts, person, dimensions) {
         .attr("height", height_svg);
 
     // Map and projection
-    const path = d3.geoPath();
-    const projection = d3.geoNaturalEarth1()
-        .scale(width_svg / 6)
-        .center([0, 20])
-        .translate([width_svg / 2, height_svg / 2]);
+    const projection = d3
+        .geoEquirectangular()
+        .center([0, 15]) // set centre to further North as we are cropping more off bottom of map
+        .scale([width_svg / (2 * Math.PI)]) // scale to fit group width
+        .translate([width_svg / 2, height_svg / 2]) // ensure centred in group
+    ;
+    const path = d3.geoPath().projection(projection);
 
     // Data and color scale
     const data = new Map();
@@ -113,9 +115,7 @@ function worldMap(counts, person, dimensions) {
             .enter()
             .append("path")
             // draw each country
-            .attr("d", d3.geoPath()
-                .projection(projection)
-            )
+            .attr("d", path)
             // set the color of each country
             .attr("fill", function (d) {
                 if (d.id == "USA") return "#8f0000";

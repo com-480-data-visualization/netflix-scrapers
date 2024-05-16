@@ -275,8 +275,7 @@ function init() {
 
     // default value
     $('#search-results').html('');
-    //name_individual = 'Kareena Kapoor Khan';
-    name_individual = 'Belinda Beatty';
+    name_individual = 'Kareena Kapoor Khan';
     $('#individual').val(name_individual);
     dimensions = getWindowData();
     prepareData(name_individual, dimensions);
