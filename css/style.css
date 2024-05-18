@@ -364,17 +364,6 @@ body::-webkit-scrollbar {
             border-radius: 8px;
             z-index: 1000; /* Ensure it's on top */
         }
-
-  text {
-      pointer-events: none;
-      fill: #fff;
-      font-weight: bold;
-      text-shadow: 1px 1px 1px #333;
-      dominant-baseline: middle;
-      text-anchor: middle;
-      font-size: 12px; /* This will be adjusted based on the bubble size in the JavaScript */
-  }
-
   circle {
       fill-opacity: 0.7;
       stroke: #fff;
