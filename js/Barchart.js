@@ -1,34 +1,12 @@
-function showBubbleChart() {
-    document.getElementById('daviz').style.display = 'none';
-    document.getElementById('bubble-chart').style.display = 'block';
-    document.getElementById('back-button').style.display = 'block';
-    // Assume loadBubbleChart is a function that setups the bubble chart
-    loadBubbleChart();
-}
 
-function showDaviz() {
-    document.getElementById('daviz').style.display = 'block';
-    document.getElementById('bubble-chart').style.display = 'none';
-    document.getElementById('back-button').style.display = 'none';
-    // Reload or refresh Daviz if necessary
-    loadDaviz();
-}
 
-function loadBubbleChart() {
+function showBubbleChart(year, imdbRange) {
     // Your D3 code to draw the bubble chart
 
-        function goBack() {
-            window.history.back();  // Uses the browser's history stack to navigate back
-        }
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        }
 
-        const imdbRange = getQueryParam('range');
-        const year = parseInt(getQueryParam('year'));
+        document.getElementById('back-button').style.display = 'block';
 
-        fetch('detailed_data.json')
+        fetch('data/others/detailed_data.json')
         .then(response => response.json())
         .then(data => {
             const filteredData = data.filter(item => item.rating_range === imdbRange && item.release_year === year);
@@ -64,11 +42,12 @@ function loadBubbleChart() {
                 topActors: genreMap[genre].topActors,
                 total: genreMap[genre].totalActors.length
             }));
+            const diameter = 400;
+            const svg = d3.select("#chart-container").html('') // Clear the previous chart
+                    .append("svg")
+                    .attr("width", diameter)
+                    .attr("height", diameter);
 
-            const diameter = 600;
-            const svg = d3.select("#bubble-chart").append("svg")
-                .attr("width", diameter)
-                .attr("height", diameter);
 
             const bubble = d3.pack()
                 .size([diameter, diameter])
@@ -185,21 +164,30 @@ function loadDaviz() {
                 legend: {title: 'IMDb Rating Range'}
             };
 
-            Plotly.newPlot('actor-chart', traces, layout);
+            Plotly.newPlot('chart-container', traces, layout);
 
-            document.getElementById('actor-chart').on('plotly_click', function(data){
-            console.log('All data points:', data.points);
-
-            const imdbRange = data.points[0].data.name;
-            console.log(data.points[0]);
-            const year = data.points[0].x;
-            window.location.href = `bubble.html?range=${encodeURIComponent(imdbRange)}&year=${encodeURIComponent(year)}`;
+            document.getElementById('chart-container').on('plotly_click', function(data){
+              const imdbRange = data.points[0].data.name;
+              const year = data.points[0].x;
+              showBubbleChart(year, imdbRange);
+            //window.location.href = `index.html?range=${encodeURIComponent(imdbRange)}&year=${encodeURIComponent(year)}`;
               });
         });
-      d3.selectAll('.bar').on('click', function(event, d) {
-      showBubbleChart();  // This will switch to the bubble chart
-});
+  // This will switch to the bubble chart
+}
 
+
+function showDaviz() {
+    diameter=400;
+    const svg = d3.select("#chart-container").html('') // Clear the previous chart
+            .append("svg")
+            .attr("width", diameter)
+            .attr("height", diameter);
+
+    document.getElementById('back-button').style.display = 'none';
+    const infoDiv = document.getElementById("info");
+    infoDiv.style.display = 'none';
+    loadDaviz(); // Reload or refresh Daviz if necessary
 }
 
 // Initially load Daviz
