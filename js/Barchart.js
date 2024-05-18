@@ -127,7 +127,7 @@ function loadBubbleChart() {
 
 function loadDaviz() {
     // Your D3 code to draw the bar chart (Daviz)
-    fetch('detailed_data.json')
+    fetch('data/other/detailed_data.json')
         .then(response => response.json())
         .then(data => {
             //console.log(data);
