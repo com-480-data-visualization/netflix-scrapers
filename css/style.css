@@ -56,7 +56,7 @@ section {
 
 .viz-container {
    order: 2;
-   
+
 }
 
 .viz-text-container {
@@ -161,7 +161,7 @@ section {
     display: none;
     cursor: pointer;
 }
-  
+
 .bar1, .bar2, .bar3 {
     width: 32px;
     height: 5px;
@@ -350,7 +350,7 @@ body {
   }
 
 
-  #info, #back-button {
+#back-button {
           display: none; /* Start with the back button hidden */
           position: fixed;
           top: 10%;
@@ -361,6 +361,18 @@ body {
           border-radius: 8px;
           z-index: 1000; /* Ensure it's on top */
       }
+  #info {
+            display: flex; /* Start with the back button hidden */
+            justify-content: center; /* Center horizontally */
+            position: fixed;
+            top: 25%;
+            right: 10%;
+            background: white;
+            border: 1px solid black;
+            padding: 10px;
+            border-radius: 8px;
+            z-index: 1000; /* Ensure it's on top */
+        }
 
   text {
       pointer-events: none;
