@@ -9,6 +9,7 @@
     <script src="js/jquery-3.7.1.js"></script>
     <script src="js/jquery.csv.js"></script>
     <script src="https://d3js.org/d3.v6.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 
 <body>
@@ -193,7 +194,7 @@
                     Visualization 3
                 </h1>
             </div>
-            
+
             <div class="viz-container white-text centered">
                 <!--Circle graph with actor network-->
                 <input type="radio" name="score_type_network" id="IMDB-network" value="IMDB" checked>
@@ -224,7 +225,10 @@
             </div>
 
             <div class="white-rectangle">
-                <!--Placeholder to add the visualization later-->
+              <div id="info" style="height=400px"></div>
+              <div id="chart-container"></div>
+              <button id="back-button" onclick="showDaviz()" style="display:none;">Back to Bar Chart</button>
+
             </div>
 
             <!--Placeholder to add comments later-->
@@ -254,6 +258,7 @@
 <script src="js/viz-network.js"></script>
 <script src="js/worldmap.js"></script>
 <script src="js/index.js"></script>
+<script src="js/Barchart.js"></script>
 <script>
     function hideNetflixLogo() {
         document.getElementById('netflix-animation-container').style.display = 'none';
