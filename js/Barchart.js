@@ -9,6 +9,7 @@ function showBubbleChart(year, imdbRange) {
         $.ajax({
         url: 'data/others/detailed_data.json',
         dataType: 'json',
+        async: false,
         success: function(data) {
             const filteredData = data.filter(item => item.rating_range === imdbRange && item.release_year === year);
 
@@ -117,6 +118,7 @@ function loadDaviz() {
     $.ajax({
         url: 'data/others/detailed_data.json',
         dataType: 'json',
+        async: false,
         success: function(data) {
             //console.log(data);
             let release_years = [...new Set(data.map(item => item.release_year))].sort();
