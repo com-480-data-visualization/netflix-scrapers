@@ -6,9 +6,10 @@ function showBubbleChart(year, imdbRange) {
 
         document.getElementById('back-button').style.display = 'block';
 
-        fetch('data/others/detailed_data.json')
-        .then(response => response.json())
-        .then(data => {
+        $.ajax({
+        url: 'data/others/detailed_data.json',
+        dataType: 'json',
+        success: function(data) {
             const filteredData = data.filter(item => item.rating_range === imdbRange && item.release_year === year);
 
             // Aggregate actors by genre for total count and top actors
@@ -100,15 +101,23 @@ function showBubbleChart(year, imdbRange) {
             infoDiv.style.display = 'block';
         }
     });
+  },
+  error: function(jqXHR, textStatus, errorThrown) {
+         console.error('Error loading JSON data:', textStatus, errorThrown);
+     },
+     complete: function() {
+         console.log('Loaded movies and shows successfully.');
+     }
         });
 
 }
 
 function loadDaviz() {
     // Your D3 code to draw the bar chart (Daviz)
-    fetch('data/others/detailed_data.json')
-        .then(response => response.json())
-        .then(data => {
+    $.ajax({
+        url: 'data/others/detailed_data.json',
+        dataType: 'json',
+        success: function(data) {
             //console.log(data);
             let release_years = [...new Set(data.map(item => item.release_year))].sort();
             //release_years=release_years.filter(item=> item.release_year>=2000);
@@ -172,6 +181,13 @@ function loadDaviz() {
               showBubbleChart(year, imdbRange);
             //window.location.href = `index.html?range=${encodeURIComponent(imdbRange)}&year=${encodeURIComponent(year)}`;
               });
+            },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error('Error loading JSON data:', textStatus, errorThrown);
+        },
+        complete: function() {
+            console.log('Loaded movies and shows successfully.');
+        }
         });
   // This will switch to the bubble chart
 }
