@@ -174,14 +174,18 @@ function prepareMap(name_individual, dimensions) {
         iso = count.iso;
         scores = country_scores.find(o => o.iso == iso);
         position = country_center.find(o => o.iso == iso);
+        country_data = world_data.find(o => o.iso == iso);
+
         lat = parseFloat(position.lat);
         long = parseFloat(position.long);
+        area = parseFloat((country_data?.area ?? "643801").replace(/,/g, ''));
         country_info = {
             actors: count.actor_count,
             directors: count.director_count,
             imdb: scores.mean_imdb,
             tmdb: scores.mean_tmdb,
-            position: {lat: lat, long: long}
+            position: {lat: lat, long: long},
+            scale: 1444260 / Math.sqrt(area)
         };
         world_info.set(iso, country_info);
     }
@@ -265,6 +269,18 @@ function init() {
         dataType: "text",
         complete: function () {
             console.log('Loaded country center successfully.');
+        }
+    })
+
+    $.ajax({
+        url: 'data/world_data.csv',
+        async: false,
+        success: function (csvd) {
+            world_data = $.csv.toObjects(csvd);
+        },
+        dataType: "text",
+        complete: function () {
+            console.log('Loaded world data successfully.');
         }
     })
 

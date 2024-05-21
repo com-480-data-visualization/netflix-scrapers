@@ -137,10 +137,9 @@ function worldMap(world_info, person, dimensions) {
             const position = country.position;
             const lat = parseFloat(position.lat);
             const long = parseFloat(position.long);
-            console.log(country, lat, long);
             var countryProjection = d3.geoEquirectangular()
                 .center([long, lat])
-                .scale(850)   // NEED TO ADJUST IT DYNAMICALLY: This is like the zoom
+                .scale(country.scale)
                 .translate([width_svg / 2, height_svg / 2])
 
             // Draw the country
