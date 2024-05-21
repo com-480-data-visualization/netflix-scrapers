@@ -165,28 +165,31 @@ function retrieveIndividual(name) {
 
     return person;
 }
+
 function prepareMap(name_individual, dimensions) {
 
     // Get the counts of actors and directors per country
-    counts_per_country = new Map();
+    world_info = new Map();
     for (count of actor_director_counts_per_iso) {
         iso = count.iso;
         scores = country_scores.find(o => o.iso == iso);
-
+        position = country_center.find(o => o.iso == iso);
+        lat = parseFloat(position.lat);
+        long = parseFloat(position.long);
         country_info = {
             actors: count.actor_count,
             directors: count.director_count,
             imdb: scores.mean_imdb,
-            tmdb: scores.mean_tmdb
+            tmdb: scores.mean_tmdb,
+            position: {lat: lat, long: long}
         };
-        counts_per_country.set(iso, country_info);
-        //console.log(`Country ${iso} has counts ${country_info.actors} actors and ${country_info.directors} directors.`);
+        world_info.set(iso, country_info);
     }
 
     const person = retrieveIndividual(name_individual)
 
     // Create the map
-    worldMap(counts_per_country, person, dimensions);
+    worldMap(world_info, person, dimensions);
 }
 
 function init() {
@@ -250,6 +253,18 @@ function init() {
         dataType: "text",
         complete: function () {
             console.log('Loaded country scores successfully.');
+        }
+    })
+
+    $.ajax({
+        url: 'data/country_center.csv',
+        async: false,
+        success: function (csvd) {
+            country_center = $.csv.toObjects(csvd);
+        },
+        dataType: "text",
+        complete: function () {
+            console.log('Loaded country center successfully.');
         }
     })
 
