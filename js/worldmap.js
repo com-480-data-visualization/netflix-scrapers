@@ -220,7 +220,7 @@ function worldMap(world_info, person, dimensions) {
                     .style("font-style", "italic")
                     .text("Birthplace not found.");
             }
-            drawLegendMap(svg, colorScale, 20, height_svg * 2 / 3);
+            drawLegendMap(svg, colorScale, 20, (height_svg + width_svg) / 5);
 
         }
 
@@ -229,7 +229,7 @@ function worldMap(world_info, person, dimensions) {
 }
 
 function drawLegendMap(svg, colorScale, legendWidth, legendHeight) {
-    const legendMargin = {top: height_svg / 3, right: 10, bottom: 0, left: 0};
+    const legendMargin = {top: height_svg / 3 - 20, right: 10, bottom: 20, left: 0};
     const legendSvgWidth = legendWidth + legendMargin.left + legendMargin.right;
     const legendSvgHeight = legendHeight + legendMargin.top + legendMargin.bottom;
 
@@ -269,6 +269,6 @@ function drawLegendMap(svg, colorScale, legendWidth, legendHeight) {
         .attr("y", (d, i) => (i + 0.5) * (legendHeight / legendData.length))
         .attr("dy", "0.35em")
         .text(d => d.label)
-        .style("font-size", "12px")
+        .style("font-size", "10px")
         .style("text-anchor", "start");
 }
