@@ -268,6 +268,10 @@ input[type="radio"]:checked {
     animation: blink 2s linear infinite;
 }
 
+.slider-container {
+    display: flex;
+    align-items: center;
+}
 
 footer {
     font-size: 11px;

@@ -10,6 +10,7 @@
     <script src="js/jquery.csv.js"></script>
     <script src="https://d3js.org/d3.v6.js"></script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="js/d3-simple-slider.min.js"></script>
 </head>
 
 <body>
@@ -203,6 +204,9 @@
             <div class="viz-container centered white-text">
                 <div id="world_map"></div>
             </div>
+            <div class="slider-container">
+                <div id="slider"></div>
+            </div>
 
             <!--Placeholder to add comments later-->
             <div class="viz-text-container white-text">
@@ -225,8 +229,8 @@
             </div>
 
             <div class="viz-container">
-              <div id="info" style="height=400px"></div>
-              <div id="chart-container"></div>
+                <div id="info" style="height: 400px;"></div>
+                <div id="chart-container"></div>
               <button id="back-button" onclick="showDaviz()" style="display:none;">Back to Bar Chart</button>
 
             </div>

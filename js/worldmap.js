@@ -15,6 +15,16 @@ function worldMap(world_info, person, dimensions) {
         .attr("width", width_svg)
         .attr("height", height_svg);
 
+    function zoomed(event) {
+        svg.selectAll('path').attr("transform", event.transform);
+        svg.selectAll('circle').attr("transform", event.transform);
+    }
+    const zoom = d3.zoom()
+        .scaleExtent([1, 8])
+        .on("zoom", zoomed);
+
+    svg.call(zoom);
+
     // Map and projection
     const projection = d3
         .geoEquirectangular()
@@ -23,7 +33,6 @@ function worldMap(world_info, person, dimensions) {
         .translate([width_svg / 2, height_svg / 2]) // ensure centred in group
     ;
     const path = d3.geoPath().projection(projection);
-    console.log(window.devicePixelRatio);
     // Data and color scale
     const data = new Map();
     world_info.forEach((value, key) => {
@@ -48,8 +57,6 @@ function worldMap(world_info, person, dimensions) {
         ]);
 
 
-
-    // tooltips
     var tooltip = d3.select('#world_map')
         .append('div')
         .style('opacity', 0)
@@ -138,58 +145,11 @@ function worldMap(world_info, person, dimensions) {
                 .classed("blinking", true);
         }
 
-        let drawCountry = function (id) {
+        function drawCountry(id) {
             // Filter data to only keep the country of interest
             data.features = topo.features.filter(d => {
-                return d.id == id
-            })
-
-            // Remove the map
-            svg.selectAll("path").remove();
-            svg.select(".legendMap").remove();
-            svg.selectAll("circle").remove();
-            svg.select(".legendBubbles").remove();
-
-            // Set projection
-            const country = world_info.get(id);
-            const position = country.position;
-            const lat = parseFloat(position.lat);
-            const long = parseFloat(position.long);
-            var countryProjection = d3.geoEquirectangular()
-                .center([long, lat])
-                .scale(country.scale)
-                .translate([width_svg / 2, height_svg / 2])
-
-            // Draw the country
-            svg.append("g")
-                .selectAll("path")
-                .data(topo.features)
-                .enter()
-                .append("path")
-                .attr("fill", function (d) {
-                    if (d.id == id) return "#FFFFFF";
-                    return "#d2d2d2";
-                })
-                .attr("d", d3.geoPath()
-                    .projection(countryProjection))
-                .style("stroke", "none")
-                .on("click", function (event, d) {
-                    svg.select(".legendBubbles").remove();
-                    drawMap();
-                })
-
-            var mouseoverbubble = function (event, d) {
-                tooltip.style("opacity", 1)
-            }
-            var mousemovebubble = function (event, d) {
-                tooltip
-                    .html(d.place + "<br>" + "Actors/Directors: " + d.count)
-                    .style("left", event.x - 10 + "px")
-                    .style("top", event.y - 10 + "px")
-            }
-            var mouseleavebubble = function (event, d) {
-                tooltip.style("opacity", 0)
-            }
+                return d.id == id;
+            });
 
             // Add a circle for the place of birth of the actor/director
             let bubbles = retrieveBirthplacesCountry(id);
@@ -199,6 +159,55 @@ function worldMap(world_info, person, dimensions) {
                     maxSize = bubbles[i].count;
                 }
             }
+
+            // Remove the map
+            svg.selectAll("path").remove();
+            svg.select(".legendMap").remove();
+            svg.selectAll("circle").remove();
+            svg.select(".legendBubbles").remove();
+            d3.select("#slider").remove();
+
+            // Set projection
+            const country = world_info.get(id);
+            const position = country.position;
+            const lat = parseFloat(position.lat);
+            const long = parseFloat(position.long);
+            var countryProjection = d3.geoEquirectangular()
+                .center([long, lat])
+                .scale(country.scale)
+                .translate([width_svg / 2, height_svg / 2]);
+
+            // Zoom on the country
+            svg.append("g")
+                .selectAll("path")
+                .data(topo.features)
+                .enter()
+                .append("path")
+                .attr("fill", function (d) {
+                    if (d.id == id) return "#FFFFFF";
+                    return "#d2d2d2";
+                })
+                .attr("d", d3.geoPath().projection(countryProjection))
+                .style("stroke", "none")
+                .on("click", function (event, d) {
+                    svg.select(".legendBubbles").remove();
+                    d3.select("#slider").remove();
+                    drawMap();
+                });
+
+            var mouseoverbubble = function (event, d) {
+                tooltip.style("opacity", 1);
+            };
+            var mousemovebubble = function (event, d) {
+                tooltip
+                    .html(d.place + "<br>" + "Actors/Directors: " + d.count)
+                    .style("left", event.x - 10 + "px")
+                    .style("top", event.y - 10 + "px");
+            };
+            var mouseleavebubble = function (event, d) {
+                tooltip.style("opacity", 0);
+            };
+
             var radiusScale = d3.scaleLog()
                 .domain([1, maxSize])
                 .range([minRadius, maxRadius]);
@@ -207,34 +216,58 @@ function worldMap(world_info, person, dimensions) {
                 .domain([1, maxSize])
                 .range(["white", "red"]);
 
-            svg.selectAll("myCircles")
-                .data(bubbles)
-                .enter()
-                .append("circle")
-                .attr("cx", function (d) {
-                    return countryProjection([d.position.long, d.position.lat])[0]
-                })
-                .attr("cy", function (d) {
-                    return countryProjection([d.position.long, d.position.lat])[1]
-                })
-                .attr("r", function (d) {
-                    return radiusScale(d.count)
-                })
-                .attr("class", "circle")
-                .style("fill", function (d) {
-                    return bubbleColorScale(d.count)
-                })
-                .attr("stroke", "#000000")
-                .attr("stroke-width", 3)
-                .attr("fill-opacity", .4)
-                .on("mouseover", mouseoverbubble)
-                .on("mousemove", mousemovebubble)
-                .on("mouseleave", mouseleavebubble)
+            var slider = d3.sliderHorizontal()
+                .min(1)
+                .max(maxSize)
+                .step(1)
+                .width(width_svg / 3 - 40)
+                .displayValue(true)
+                .on('onchange', (val) => {
+                    drawBubbles(val);
+                });
 
-            if (person.iso === id) {
-                drawPerson(countryProjection, "000000", 8);
+            d3.select("#world_map")
+                .append('div')
+                .attr("id", "slider")
+                .append('svg')
+                .attr('width', width_svg / 3)
+                .attr('height', 80)
+                .append('g')
+                .attr('transform', 'translate(20,40)')
+                .call(slider);
+
+            function drawBubbles(minCount) {
+                svg.selectAll("circle").remove();
+                svg.selectAll("myCircles")
+                    .data(bubbles.filter(d => d.count >= minCount))
+                    .enter()
+                    .append("circle")
+                    .attr("cx", function (d) {
+                        return countryProjection([d.position.long, d.position.lat])[0];
+                    })
+                    .attr("cy", function (d) {
+                        return countryProjection([d.position.long, d.position.lat])[1];
+                    })
+                    .attr("r", function (d) {
+                        return radiusScale(d.count);
+                    })
+                    .attr("class", "circle")
+                    .style("fill", function (d) {
+                        return bubbleColorScale(d.count);
+                    })
+                    .attr("stroke", "#000000")
+                    .attr("stroke-width", 3)
+                    .attr("fill-opacity", .4)
+                    .on("mouseover", mouseoverbubble)
+                    .on("mousemove", mousemovebubble)
+                    .on("mouseleave", mouseleavebubble);
+
+                if (person.iso === id) {
+                    drawPerson(countryProjection, "000000", 8);
+                }
             }
 
+            drawBubbles(1);
             drawLegendBubbles(svg, bubbleColorScale, maxSize, country);
         }
 
@@ -289,7 +322,7 @@ function worldMap(world_info, person, dimensions) {
                     .text("Birthplace not found.");
             }
 
-            drawLegendMap(svg, colorScale, width_svg/100, (height_svg + width_svg) / 5);
+            drawLegendMap(svg, colorScale, width_svg/100, (height_svg * width_svg) / 2500);
 
         }
 
@@ -298,7 +331,7 @@ function worldMap(world_info, person, dimensions) {
 }
 
 function drawLegendMap(svg, colorScale, legendWidth, legendHeight) {
-    const legendMargin = {top: height_svg / 3 - 20, right: 10, bottom: 20, left: 0};
+    const legendMargin = {top: (height_svg - legendHeight) / 2, right: 10, bottom: 20, left: 0};
     let textSize = 8 + parseInt(width_svg / 600);
     const legendGroup = svg.append("g")
         .attr("class", "legendMap")
@@ -341,8 +374,9 @@ function drawLegendMap(svg, colorScale, legendWidth, legendHeight) {
 }
 
 function drawLegendBubbles(svg, colorScale, maxSize, countryInfo) {
-    const legendWidth = width_svg / 4.5;
-    const legendMargin = {top: height_svg - 60, right: 20, bottom: 20, left: 20};
+    const legendWidth = 100 + parseInt(width_svg / 15);
+    const legendMargin = {top: height_svg - 30, right: 20, bottom: 20, left: 20};
+    let textSize = 9 + parseInt(width_svg / 600);
 
     const legendGroup = svg.append("g")
         .attr("class", "legendBubbles")
@@ -357,29 +391,31 @@ function drawLegendBubbles(svg, colorScale, maxSize, countryInfo) {
         legendData = [1, 10, 100, maxSize];
     }
 
-    const legendScale = d3.scaleLog()
-        .domain([1, maxSize])
-        .range([0, legendWidth]);
+    const numberOfItems = legendData.length;
+    const spacing = legendWidth / (numberOfItems - 1);
 
-    const countryInfoText = `
-        ${countryInfo.name},
-        Mean IMDB: ${countryInfo.imdb},
-        Mean TMDB: ${countryInfo.tmdb}
-    `;
+    const countryInfoText = `${countryInfo.name},   Mean IMDB: ${countryInfo.imdb},   TMDB: ${countryInfo.tmdb}`;
 
     legendGroup.append("text")
         .attr("x", 0)
-        .attr("y", -25)
-        .style("font-size", "12px")
+        .attr("y", -40)
+        .style("font-size", (textSize + 2).toString() + "px")
         .style("text-anchor", "start")
-        .text(countryInfoText.trim().replace(/\s\s+/g, ' ').replace(/\n/g, ' ').replace(/ /g, ' '));
+        .text(countryInfoText);
+
+    legendGroup.append("text")
+        .attr("x", 0)
+        .attr("y", -10)
+        .style("font-size", (textSize + 1).toString() + "px")
+        .style("text-anchor", "start")
+        .text("Number of Actors/Directors");
 
     legendGroup.selectAll("rect.colorLegend")
         .data(legendData)
         .enter()
         .append("rect")
         .attr("class", "colorLegend")
-        .attr("x", d => legendScale(d))
+        .attr("x", (d, i) => i * spacing)
         .attr("y", 0)
         .attr("width", 10)
         .attr("height", 10)
@@ -390,17 +426,12 @@ function drawLegendBubbles(svg, colorScale, maxSize, countryInfo) {
         .enter()
         .append("text")
         .attr("class", "value")
-        .attr("x", d => legendScale(d) + 15)
+        .attr("x", (d, i) => i * spacing + 15)
         .attr("y", 5)
         .attr("dy", "0.35em")
         .text(d => d)
-        .style("font-size", "10px")
+        .style("font-size", textSize.toString() + "px")
         .style("text-anchor", "start");
-
-    legendGroup.append("text")
-        .attr("x", 0)
-        .attr("y", -10)
-        .style("font-size", "13px")
-        .style("text-anchor", "start")
-        .text("Number of Actors/Directors");
 }
+
+
