@@ -160,7 +160,7 @@ function retrieveIndividual(name) {
         const long = parseFloat(split[1]);
         const place = individual.state == "" ? `${individual.city}, ${individual.country}` : `${individual.city}, ${individual.state}, ${individual.country}`;
 
-        person = {name: individual.name, place: place, position: {lat: lat, long: long}};
+        person = {name: individual.name, iso: individual.iso, place: place, position: {lat: lat, long: long}};
     }
 
     return person;
@@ -176,10 +176,11 @@ function prepareMap(name_individual, dimensions) {
         position = country_center.find(o => o.iso == iso);
         country_data = world_data.find(o => o.iso == iso);
 
-        lat = parseFloat(position.lat);
-        long = parseFloat(position.long);
-        area = parseFloat((country_data?.area ?? "643801").replace(/,/g, ''));
+        let lat = +position.lat;
+        let long = +position.long;
+        let area = parseFloat((country_data?.area ?? "643801").replace(/,/g, ''));
         country_info = {
+            name: country_data?.Country ?? "Unknown",
             actors: count.actor_count,
             directors: count.director_count,
             imdb: scores.mean_imdb,
@@ -194,6 +195,27 @@ function prepareMap(name_individual, dimensions) {
 
     // Create the map
     worldMap(world_info, person, dimensions);
+}
+
+function retrieveBirthplacesCountry(iso) {
+    bubblesCountry = bubbles.find(o => o.iso == iso);
+    bubblesData = [];
+    places = bubblesCountry.places.substring(1, bubblesCountry.places.length - 1).split(",");
+    latlongs = bubblesCountry.latlongs.substring(2, bubblesCountry.latlongs.length - 2).split(",");
+    counts = bubblesCountry.counts.substring(1, bubblesCountry.counts.length - 1).split(",");
+    for (let i = 0; i < latlongs.length; i++) {
+        let place = places[i].trim().replaceAll('\'', '').replaceAll('\"', '').split("|").join(', ');
+        let latlong = latlongs[i].trim().replaceAll('\'', '').replaceAll('\"', '').replaceAll('(', '').replaceAll(')', '');
+        let [lat, long] = latlong.split("|").map(Number);
+        let count = +counts[i];
+        bubblesData.push({
+            position: {lat: lat, long: long},
+            place: place,
+            count: count
+        });
+    }
+
+    return bubblesData;
 }
 
 function init() {
@@ -212,7 +234,7 @@ function init() {
     })
 
     $.ajax({
-        url: 'data/credits.csv',
+        url: 'data/new_credits.csv',
         async: false,
         success: function (csvd) {
             credits = $.csv.toObjects(csvd);
@@ -281,6 +303,18 @@ function init() {
         dataType: "text",
         complete: function () {
             console.log('Loaded world data successfully.');
+        }
+    })
+
+    $.ajax({
+        url: 'data/bubbles.csv',
+        async: false,
+        success: function (csvd) {
+            bubbles = $.csv.toObjects(csvd);
+        },
+        dataType: "text",
+        complete: function () {
+            console.log('Loaded bubbles successfully.');
         }
     })
 

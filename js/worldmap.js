@@ -1,5 +1,7 @@
 width_svg = 0;
 height_svg = 0;
+minRadius = 3;
+maxRadius = 20;
 
 // Took inspiration from Patrick's code and https://d3-graph-gallery.com/graph/choropleth_hover_effect.html
 function worldMap(world_info, person, dimensions) {
@@ -121,6 +123,21 @@ function worldMap(world_info, person, dimensions) {
                 .style("opacity", 0);
         }
 
+        let drawPerson = function (proj, color, size) {
+            // Convert latitude and longitude to SVG coordinates
+            const [x, y] = proj([person.position.long, person.position.lat]);
+            // Add a circle for the place of birth of the actor/director
+            svg.append("circle")
+                .attr("cx", x)
+                .attr("cy", y)
+                .attr("r", size)
+                .style("fill", color)
+                .on("mouseover", showTooltipPoint)
+                .on("mousemove", moveTooltip)
+                .on("mouseleave", hideTooltip)
+                .classed("blinking", true);
+        }
+
         let drawCountry = function (id) {
             // Filter data to only keep the country of interest
             data.features = topo.features.filter(d => {
@@ -131,6 +148,7 @@ function worldMap(world_info, person, dimensions) {
             svg.selectAll("path").remove();
             svg.select(".legendMap").remove();
             svg.selectAll("circle").remove();
+            svg.select(".legendBubbles").remove();
 
             // Set projection
             const country = world_info.get(id);
@@ -155,7 +173,69 @@ function worldMap(world_info, person, dimensions) {
                 .attr("d", d3.geoPath()
                     .projection(countryProjection))
                 .style("stroke", "none")
-                .on("click", drawMap)
+                .on("click", function (event, d) {
+                    svg.select(".legendBubbles").remove();
+                    drawMap();
+                })
+
+            var mouseoverbubble = function (event, d) {
+                tooltip.style("opacity", 1)
+            }
+            var mousemovebubble = function (event, d) {
+                tooltip
+                    .html(d.place + "<br>" + "Number of actors: " + d.count)
+                    .style("left", event.x - 10 + "px")
+                    .style("top", event.y - 10 + "px")
+            }
+            var mouseleavebubble = function (event, d) {
+                tooltip.style("opacity", 0)
+            }
+
+            // Add a circle for the place of birth of the actor/director
+            let bubbles = retrieveBirthplacesCountry(id);
+            let maxSize = 0;
+            for (let i = 0; i < bubbles.length; i++) {
+                if (bubbles[i].count > maxSize) {
+                    maxSize = bubbles[i].count;
+                }
+            }
+            var radiusScale = d3.scaleLog()
+                .domain([1, maxSize])
+                .range([minRadius, maxRadius]);
+
+            var bubbleColorScale = d3.scaleLog()
+                .domain([1, maxSize])
+                .range(["white", "red"]);
+
+            svg.selectAll("myCircles")
+                .data(bubbles)
+                .enter()
+                .append("circle")
+                .attr("cx", function (d) {
+                    return countryProjection([d.position.long, d.position.lat])[0]
+                })
+                .attr("cy", function (d) {
+                    return countryProjection([d.position.long, d.position.lat])[1]
+                })
+                .attr("r", function (d) {
+                    return radiusScale(d.count)
+                })
+                .attr("class", "circle")
+                .style("fill", function (d) {
+                    return bubbleColorScale(d.count)
+                })
+                .attr("stroke", "#000000")
+                .attr("stroke-width", 3)
+                .attr("fill-opacity", .4)
+                .on("mouseover", mouseoverbubble)
+                .on("mousemove", mousemovebubble)
+                .on("mouseleave", mouseleavebubble)
+
+            if (person.iso === id) {
+                drawPerson(countryProjection, "000000", 8);
+            }
+
+            drawLegendBubbles(svg, bubbleColorScale, maxSize, country);
         }
 
         let drawMap = function () {
@@ -197,18 +277,7 @@ function worldMap(world_info, person, dimensions) {
                 });
 
             if (person.place != null) {
-                // Convert latitude and longitude to SVG coordinates
-                const [x, y] = projection([person.position.long, person.position.lat]);
-                // Add a circle for the place of birth of the actor/director
-                svg.append("circle")
-                    .attr("cx", x)
-                    .attr("cy", y)
-                    .attr("r", 5)
-                    .style("fill", "#FFFF00")
-                    .on("mouseover", showTooltipPoint)
-                    .on("mousemove", moveTooltip)
-                    .on("mouseleave", hideTooltip)
-                    .classed("blinking", true);
+                drawPerson(projection, "#FFFF00", 5);
             } else {
                 // Display a message that the birthplace was not found
                 var alertText = svg.append("text")
@@ -219,6 +288,7 @@ function worldMap(world_info, person, dimensions) {
                     .style("font-style", "italic")
                     .text("Birthplace not found.");
             }
+
             drawLegendMap(svg, colorScale, 20, (height_svg + width_svg) / 5);
 
         }
@@ -229,8 +299,6 @@ function worldMap(world_info, person, dimensions) {
 
 function drawLegendMap(svg, colorScale, legendWidth, legendHeight) {
     const legendMargin = {top: height_svg / 3 - 20, right: 10, bottom: 20, left: 0};
-    const legendSvgWidth = legendWidth + legendMargin.left + legendMargin.right;
-    const legendSvgHeight = legendHeight + legendMargin.top + legendMargin.bottom;
 
     const legendGroup = svg.append("g")
         .attr("class", "legendMap")
@@ -270,4 +338,70 @@ function drawLegendMap(svg, colorScale, legendWidth, legendHeight) {
         .text(d => d.label)
         .style("font-size", "10px")
         .style("text-anchor", "start");
+}
+
+function drawLegendBubbles(svg, colorScale, maxSize, countryInfo) {
+    const legendWidth = width_svg / 4.5;
+    const legendMargin = {top: height_svg - 60, right: 20, bottom: 20, left: 20};
+
+    const legendGroup = svg.append("g")
+        .attr("class", "legendBubbles")
+        .attr("transform", `translate(${legendMargin.left},${legendMargin.top})`);
+
+    let legendData;
+    if (maxSize < 10) {
+        legendData = [1, maxSize];
+    } else if (maxSize < 100) {
+        legendData = [1, 10, maxSize];
+    } else {
+        legendData = [1, 10, 100, maxSize];
+    }
+
+    const legendScale = d3.scaleLog()
+        .domain([1, maxSize])
+        .range([0, legendWidth]);
+
+    // Add country info text
+    const countryInfoText = `
+        Country: ${countryInfo.name},
+        Mean IMDB: ${countryInfo.imdb},
+        Mean TMDB: ${countryInfo.tmdb}
+    `;
+
+    legendGroup.append("text")
+        .attr("x", 0)
+        .attr("y", -25)
+        .style("font-size", "12px")
+        .style("text-anchor", "start")
+        .text(countryInfoText.trim().replace(/\s\s+/g, ' ').replace(/\n/g, ' ').replace(/ /g, ' '));
+
+    legendGroup.selectAll("rect.colorLegend")
+        .data(legendData)
+        .enter()
+        .append("rect")
+        .attr("class", "colorLegend")
+        .attr("x", d => legendScale(d))
+        .attr("y", 0)
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("fill", d => colorScale(d));
+
+    legendGroup.selectAll("text.value")
+        .data(legendData)
+        .enter()
+        .append("text")
+        .attr("class", "value")
+        .attr("x", d => legendScale(d) + 15)
+        .attr("y", 5)
+        .attr("dy", "0.35em")
+        .text(d => d)
+        .style("font-size", "10px")
+        .style("text-anchor", "start");
+
+    legendGroup.append("text")
+        .attr("x", 0)
+        .attr("y", -10)
+        .style("font-size", "13px")
+        .style("text-anchor", "start")
+        .text("Number of Actors/Directors");
 }
