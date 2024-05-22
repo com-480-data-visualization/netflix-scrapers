@@ -183,7 +183,7 @@ function worldMap(world_info, person, dimensions) {
             }
             var mousemovebubble = function (event, d) {
                 tooltip
-                    .html(d.place + "<br>" + "Number of actors: " + d.count)
+                    .html(d.place + "<br>" + "Actors/Directors: " + d.count)
                     .style("left", event.x - 10 + "px")
                     .style("top", event.y - 10 + "px")
             }
@@ -361,9 +361,8 @@ function drawLegendBubbles(svg, colorScale, maxSize, countryInfo) {
         .domain([1, maxSize])
         .range([0, legendWidth]);
 
-    // Add country info text
     const countryInfoText = `
-        Country: ${countryInfo.name},
+        ${countryInfo.name},
         Mean IMDB: ${countryInfo.imdb},
         Mean TMDB: ${countryInfo.tmdb}
     `;
