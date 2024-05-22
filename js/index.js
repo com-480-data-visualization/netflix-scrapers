@@ -347,6 +347,7 @@ function init() {
 
     // Display the map
     prepareMap(name_individual, dimensions);
+    loadDaviz();
 }
 
 function getWindowData() {
@@ -393,4 +394,5 @@ window.onresize = () => {
     dimensions = getWindowData();
     prepareData(name_individual, dimensions);
     prepareMap(name_individual, dimensions);
+    loadDaviz();
 };

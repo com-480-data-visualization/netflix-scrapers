@@ -363,25 +363,29 @@ body::-webkit-scrollbar {
             padding: 10px;
             border-radius: 8px;
             z-index: 1000; /* Ensure it's on top */
+            display: none;
         }
 
-  text {
-      pointer-events: none;
+text {
       fill: #fff;
-      font-weight: bold;
-      text-shadow: 1px 1px 1px #333;
-      dominant-baseline: middle;
-      text-anchor: middle;
-      font-size: 12px; /* This will be adjusted based on the bubble size in the JavaScript */
   }
 
-  circle {
+#viz4 text {
+    pointer-events: none;
+    fill: #fff;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px #333;
+    dominant-baseline: middle;
+    text-anchor: middle;
+    font-size: 12px; /* This will be adjusted based on the bubble size in the JavaScript */
+}
+  #viz4 circle, #viz3 circle {
       fill-opacity: 0.7;
       stroke: #fff;
       stroke-width: 1.5px;
   }
 
-  circle:hover {
+ #viz4 circle:hover {
       stroke: #000;
       stroke-width: 2px;
   }

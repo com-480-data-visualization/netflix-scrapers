@@ -207,6 +207,3 @@ function showDaviz() {
     infoDiv.style.display = 'none';
     loadDaviz(); // Reload or refresh Daviz if necessary
 }
-
-// Initially load Daviz
-loadDaviz();

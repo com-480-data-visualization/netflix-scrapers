@@ -19,9 +19,10 @@ function plotNetwork(network, dimensions) {
     // simulate actor network
     const simulation = d3.forceSimulation(nodes)
                             .force("link", d3.forceLink(links).id(d => d.id).distance(function (d) {
-                                return (d.is_ms) ? 150 : 200;
+                                return (d.is_ms) ? 20 : 20;
                             }))
                             .force("charge", d3.forceManyBody().strength(-400))
+                            .force("center", d3.forceCenter(width_svg / 2, height_svg / 2))
                             .force("x", d3.forceX())
                             .force("y", d3.forceY());
 
@@ -90,7 +91,7 @@ function plotNetwork(network, dimensions) {
     
     nodeActor.append("circle")
         .attr("fill", "blue")
-        .attr("stroke", 'black')
+        .attr("stroke", 'white')
         .attr("stroke-width", 1)
         .attr("r", 5);
     
@@ -128,7 +129,7 @@ function plotNetwork(network, dimensions) {
 
     nodeMS.append("circle")
         .attr("fill", "purple")
-        .attr("stroke", 'black')
+        .attr("stroke", 'white')
         .attr("stroke-width", 1)
         .attr("r", 10);
 
@@ -164,7 +165,13 @@ function plotNetwork(network, dimensions) {
                 .append('svg')
                 .attr('width', width_svg)
                 .attr('height', height_svg);
-        
+
+    svg.append("text")
+        .attr("x", 0)
+        .attr("y", 15)
+        .text('IMDB/TMDB score')
+        .style("font-size", "10px");
+
     var colors = ['red', 'yellow', 'green'];
     var l = colors.length - 1;
 
@@ -187,28 +194,28 @@ function plotNetwork(network, dimensions) {
 
     svg.append('rect')
         .attr('x', 0)
-        .attr('y', 20)
+        .attr('y', 35)
         .attr('width', width + margin.left + margin.right)
         .attr('height', height_svg)
         .style('fill', 'url(#grad)');
 
     svg.append("text")
         .attr("x", 0)
-        .attr("y", 15)
+        .attr("y", 30)
         .text('0.0')
         .style("font-size", "10px")
         .style("font-weight", "bold");
     
     svg.append("text")
         .attr("x", (width + margin.left + margin.right - 20) / 2)
-        .attr("y", 15)
+        .attr("y", 30)
         .text('5.0')
         .style("font-size", "10px")
         .style("font-weight", "bold");
 
     svg.append("text")
         .attr("x", width + margin.left + margin.right - 20)
-        .attr("y", 15)
+        .attr("y", 30)
         .text('10.0')
         .style("font-size", "10px")
         .style("font-weight", "bold");

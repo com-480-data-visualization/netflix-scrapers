@@ -118,10 +118,10 @@
         </div>
         <div class="topnav">
             <a class="nav-link active" href="#overview">Project overview</a>
-            <a class="nav-link" href="#viz1">Visualization 1</a>
-            <a class="nav-link" href="#viz2">Visualization 2</a>
-            <a class="nav-link" href="#viz3">Visualization 3</a>
-            <a class="nav-link" href="#viz4">Visualization 4</a>
+            <a class="nav-link" href="#viz1">Line Chart</a>
+            <a class="nav-link" href="#viz2">Actor/Director Network</a>
+            <a class="nav-link" href="#viz3">World Map</a>
+            <a class="nav-link" href="#viz4">Bar Chart & Bubble Chart</a>
         </div>
 
 
@@ -133,7 +133,7 @@
         <section id="viz1" class="two">
             <div class="viz-title-container">
                 <h1 class="title">
-                    Visualization 1
+                    Line Chart
                 </h1>
             </div>
 
@@ -167,31 +167,7 @@
         <section id="viz2" class="three">
             <div class="viz-title-container">
                 <h1 class="title">
-                    Visualization 2
-                </h1>
-            </div>
-
-            <div class="viz-container centered white-text">
-                <div id="world_map"></div>
-            </div>
-
-            <!--Placeholder to add comments later-->
-            <div class="viz-text-container white-text">
-                <text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Facilisis volutpat est velit egestas dui id. Iaculis at erat pellentesque
-                    adipiscing commodo elit at imperdiet dui. Tortor consequat id porta nibh venenatis cras sed felis
-                    eget. Morbi tristique senectus et netus et malesuada fames ac. Cras sed felis eget velit aliquet
-                    sagittis id consectetur purus. Elementum tempus egestas sed sed risus pretium quam. Fames ac turpis
-                    egestas integer eget. Et malesuada fames ac turpis. Quam quisque id diam vel quam.
-                </text>
-            </div>
-        </section>
-
-        <section id="viz3" class="four">
-            <div class="viz-title-container">
-                <h1 class="title">
-                    Visualization 3
+                    Actor/Director Network
                 </h1>
             </div>
 
@@ -217,14 +193,38 @@
             </div>
         </section>
 
-        <section id="viz4" class="five">
+        <section id="viz3" class="four">
             <div class="viz-title-container">
                 <h1 class="title">
-                    Visualization 4
+                    World Map
                 </h1>
             </div>
 
-            <div class="white-rectangle">
+            <div class="viz-container centered white-text">
+                <div id="world_map"></div>
+            </div>
+
+            <!--Placeholder to add comments later-->
+            <div class="viz-text-container white-text">
+                <text>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua. Facilisis volutpat est velit egestas dui id. Iaculis at erat pellentesque
+                    adipiscing commodo elit at imperdiet dui. Tortor consequat id porta nibh venenatis cras sed felis
+                    eget. Morbi tristique senectus et netus et malesuada fames ac. Cras sed felis eget velit aliquet
+                    sagittis id consectetur purus. Elementum tempus egestas sed sed risus pretium quam. Fames ac turpis
+                    egestas integer eget. Et malesuada fames ac turpis. Quam quisque id diam vel quam.
+                </text>
+            </div>
+        </section>
+
+        <section id="viz4" class="five">
+            <div class="viz-title-container">
+                <h1 class="title">
+                    Bar Chart & Bubble Chart
+                </h1>
+            </div>
+
+            <div class="viz-container">
               <div id="info" style="height=400px"></div>
               <div id="chart-container"></div>
               <button id="back-button" onclick="showDaviz()" style="display:none;">Back to Bar Chart</button>
@@ -257,8 +257,8 @@
 <script src="js/viz-linechart.js"></script>
 <script src="js/viz-network.js"></script>
 <script src="js/worldmap.js"></script>
-<script src="js/index.js"></script>
 <script src="js/Barchart.js"></script>
+<script src="js/index.js"></script>
 <script>
     function hideNetflixLogo() {
         document.getElementById('netflix-animation-container').style.display = 'none';
