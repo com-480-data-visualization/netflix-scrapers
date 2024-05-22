@@ -23,7 +23,7 @@ function worldMap(world_info, person, dimensions) {
         .translate([width_svg / 2, height_svg / 2]) // ensure centred in group
     ;
     const path = d3.geoPath().projection(projection);
-
+    console.log(window.devicePixelRatio);
     // Data and color scale
     const data = new Map();
     world_info.forEach((value, key) => {
@@ -34,19 +34,19 @@ function worldMap(world_info, person, dimensions) {
     const colorScale = d3.scaleThreshold()
         .domain([0, 1, 10, 25, 50, 100, 250, 500, 1000, 2000, 4000])
         .range([
-            "#ffffff",
-            "#ffffcc",
-            "#ffeb99",
-            "#ffd966",
-            "#ffc733",
-            "#ffb400",
-            "#ff8c00",
-            "#ff5500",
-            "#e60000",
-            "#a000a0",
-            "#4b0082",
-            "#301934"
+            d3.interpolateYlOrRd(0),
+            d3.interpolateYlOrRd(0.1),
+            d3.interpolateYlOrRd(0.2),
+            d3.interpolateYlOrRd(0.3),
+            d3.interpolateYlOrRd(0.4),
+            d3.interpolateYlOrRd(0.5),
+            d3.interpolateYlOrRd(0.6),
+            d3.interpolateYlOrRd(0.7),
+            d3.interpolateYlOrRd(0.8),
+            d3.interpolateYlOrRd(0.9),
+            d3.interpolateYlOrRd(1)
         ]);
+
 
 
     // tooltips
@@ -289,7 +289,7 @@ function worldMap(world_info, person, dimensions) {
                     .text("Birthplace not found.");
             }
 
-            drawLegendMap(svg, colorScale, 20, (height_svg + width_svg) / 5);
+            drawLegendMap(svg, colorScale, width_svg/100, (height_svg + width_svg) / 5);
 
         }
 
@@ -299,23 +299,23 @@ function worldMap(world_info, person, dimensions) {
 
 function drawLegendMap(svg, colorScale, legendWidth, legendHeight) {
     const legendMargin = {top: height_svg / 3 - 20, right: 10, bottom: 20, left: 0};
-
+    let textSize = 8 + parseInt(width_svg / 600);
     const legendGroup = svg.append("g")
         .attr("class", "legendMap")
         .attr("transform", `translate(${legendMargin.left},${legendMargin.top})`);
 
     const legendData = [
-        {color: "#ffffcc", label: "0-1"},
-        {color: "#ffeb99", label: "1-10"},
-        {color: "#ffd966", label: "10-25"},
-        {color: "#ffc733", label: "25-50"},
-        {color: "#ffb400", label: "50-100"},
-        {color: "#ff8c00", label: "100-250"},
-        {color: "#ff5500", label: "250-500"},
-        {color: "#e60000", label: "500-1000"},
-        {color: "#a000a0", label: "1000-2000"},
-        {color: "#4b0082", label: "2000-4000"},
-        {color: "#301934", label: "4000+"}
+        {color: d3.interpolateYlOrRd(0), label: "0-1"},
+        {color: d3.interpolateYlOrRd(0.1), label: "1-10"},
+        {color: d3.interpolateYlOrRd(0.2), label: "10-25"},
+        {color: d3.interpolateYlOrRd(0.3), label: "25-50"},
+        {color: d3.interpolateYlOrRd(0.4), label: "50-100"},
+        {color: d3.interpolateYlOrRd(0.5), label: "100-250"},
+        {color: d3.interpolateYlOrRd(0.6), label: "250-500"},
+        {color: d3.interpolateYlOrRd(0.7), label: "500-1000"},
+        {color: d3.interpolateYlOrRd(0.8), label: "1000-2000"},
+        {color: d3.interpolateYlOrRd(0.9), label: "2000-4000"},
+        {color: d3.interpolateYlOrRd(1), label: "4000+"}
     ];
 
     legendGroup.selectAll("rect")
@@ -336,7 +336,7 @@ function drawLegendMap(svg, colorScale, legendWidth, legendHeight) {
         .attr("y", (d, i) => (i + 0.5) * (legendHeight / legendData.length))
         .attr("dy", "0.35em")
         .text(d => d.label)
-        .style("font-size", "10px")
+        .style("font-size", + textSize.toString() + "px")
         .style("text-anchor", "start");
 }
 
