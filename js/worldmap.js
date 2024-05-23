@@ -389,7 +389,10 @@ function drawLegendBubbles(svg, colorScale, maxSize, countryInfo) {
         .attr("transform", `translate(${legendMargin.left},${legendMargin.top})`);
 
     let legendData;
-    if (maxSize < 10) {
+    if (maxSize === 1) {
+        legendData = [1];
+    }
+    else if (maxSize < 10) {
         legendData = [1, maxSize];
     } else if (maxSize < 100) {
         legendData = [1, 10, maxSize];
