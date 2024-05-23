@@ -19,11 +19,13 @@ function worldMap(world_info, person, dimensions) {
         svg.selectAll('path').attr("transform", event.transform);
         svg.selectAll('circle').attr("transform", event.transform);
     }
+
     function resetZoom() {
         svg.transition()
             .duration(500)
             .call(zoom.transform, d3.zoomIdentity);
     }
+
     const zoom = d3.zoom()
         .scaleExtent([1, 8])
         .on("zoom", zoomed);
@@ -328,7 +330,7 @@ function worldMap(world_info, person, dimensions) {
                     .text("Birthplace not found.");
             }
 
-            drawLegendMap(svg, colorScale, width_svg/100, (height_svg * width_svg) / 2500);
+            drawLegendMap(svg, colorScale, width_svg / 100, (height_svg * width_svg) / 2500);
 
         }
 
@@ -375,7 +377,7 @@ function drawLegendMap(svg, colorScale, legendWidth, legendHeight) {
         .attr("y", (d, i) => (i + 0.5) * (legendHeight / legendData.length))
         .attr("dy", "0.35em")
         .text(d => d.label)
-        .style("font-size", + textSize.toString() + "px")
+        .style("font-size", +textSize.toString() + "px")
         .style("text-anchor", "start");
 }
 
@@ -391,8 +393,7 @@ function drawLegendBubbles(svg, colorScale, maxSize, countryInfo) {
     let legendData;
     if (maxSize === 1) {
         legendData = [1];
-    }
-    else if (maxSize < 10) {
+    } else if (maxSize < 10) {
         legendData = [1, maxSize];
     } else if (maxSize < 100) {
         legendData = [1, 10, maxSize];
@@ -400,7 +401,7 @@ function drawLegendBubbles(svg, colorScale, maxSize, countryInfo) {
         legendData = [1, 10, 100, maxSize];
     }
 
-    const numberOfItems = legendData.length;
+    const numberOfItems = legendData.length === 1 ? legendData.length + 1 : legendData.length;
     const spacing = legendWidth / (numberOfItems - 1);
 
     const countryInfoText = `${countryInfo.name},   Mean IMDB: ${countryInfo.imdb},   TMDB: ${countryInfo.tmdb}`;
