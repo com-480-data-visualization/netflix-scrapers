@@ -191,7 +191,7 @@ function worldMap(world_info, person, dimensions) {
                 .enter()
                 .append("path")
                 .attr("fill", function (d) {
-                    if (d.id == id) return "#FFFFFF";
+                    if (d.id === id) return "#FFFFFF";
                     return "#d2d2d2";
                 })
                 .attr("d", d3.geoPath().projection(countryProjection))
@@ -199,6 +199,7 @@ function worldMap(world_info, person, dimensions) {
                 .on("click", function (event, d) {
                     svg.select(".legendBubbles").remove();
                     d3.select("#slider").remove();
+                    resetZoom();
                     drawMap();
                 });
 
@@ -307,6 +308,7 @@ function worldMap(world_info, person, dimensions) {
                     showTooltipCountry(event, d);
                 }).on("click", function (event, d) {
                 if (world_info.has(d.id)) {
+                    resetZoom();
                     drawCountry(d.id);
                     mouseLeave(event.target);
                     hideTooltip(event, d);
