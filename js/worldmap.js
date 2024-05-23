@@ -226,7 +226,7 @@ function worldMap(world_info, person, dimensions) {
 
             var slider = d3.sliderHorizontal()
                 .min(1)
-                .max(maxSize)
+                .max(maxSize + 1)
                 .step(1)
                 .width(width_svg / 2 - 40)
                 .displayValue(true)
