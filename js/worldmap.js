@@ -19,6 +19,11 @@ function worldMap(world_info, person, dimensions) {
         svg.selectAll('path').attr("transform", event.transform);
         svg.selectAll('circle').attr("transform", event.transform);
     }
+    function resetZoom() {
+        svg.transition()
+            .duration(500)
+            .call(zoom.transform, d3.zoomIdentity);
+    }
     const zoom = d3.zoom()
         .scaleExtent([1, 8])
         .on("zoom", zoomed);
@@ -29,8 +34,8 @@ function worldMap(world_info, person, dimensions) {
     const projection = d3
         .geoEquirectangular()
         .center([0, 15]) // set centre to further North as we are cropping more off bottom of map
-        .scale([width_svg / (2 * Math.PI)]) // scale to fit group width
-        .translate([width_svg / 2, height_svg / 2]) // ensure centred in group
+        .scale([width_svg / (2 * Math.PI)])
+        .translate([width_svg / 2, height_svg / 2])
     ;
     const path = d3.geoPath().projection(projection);
     // Data and color scale
@@ -220,9 +225,10 @@ function worldMap(world_info, person, dimensions) {
                 .min(1)
                 .max(maxSize)
                 .step(1)
-                .width(width_svg / 3 - 40)
+                .width(width_svg / 2 - 40)
                 .displayValue(true)
                 .on('onchange', (val) => {
+                    resetZoom();
                     drawBubbles(val);
                 });
 
@@ -230,7 +236,7 @@ function worldMap(world_info, person, dimensions) {
                 .append('div')
                 .attr("id", "slider")
                 .append('svg')
-                .attr('width', width_svg / 3)
+                .attr('width', width_svg / 2)
                 .attr('height', 80)
                 .append('g')
                 .attr('transform', 'translate(20,40)')
