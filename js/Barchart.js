@@ -115,6 +115,10 @@ function showBubbleChart(year, imdbRange) {
 
 function loadDaviz() {
     // Your D3 code to draw the bar chart (Daviz)
+    d3.select("#chart-container").html('')
+    const infoDiv = document.getElementById("info");
+    infoDiv.style.display = 'none';
+    document.getElementById('back-button').style.display = 'none';
     $.ajax({
         url: 'data/others/detailed_data.json',
         dataType: 'json',
