@@ -172,7 +172,7 @@ function loadDaviz() {
             const layout = {
                 barmode: 'stack',
                 hovermode: 'closest',
-                title: 'Number of Actors in IMDb Rating Ranges per Release_Year,
+                title: 'Number of Actors in IMDb Rating Ranges per Release_Year',
                 xaxis: {title: 'Release_Year'},
                 yaxis: {title: 'Number of Actors'},
                 legend: {title: 'IMDb Rating Range'}
