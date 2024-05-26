@@ -55,14 +55,15 @@ section {
 }
 
 .viz-container {
-   order: 2;
+   order: 3;
+   padding-bottom: 2%;
 
 }
 
 .viz-text-container {
-    order: 3;
-    padding-top: 5%;
-    padding-bottom: 5%;
+    order: 2;
+    padding-top: 2%;
+    padding-bottom: 2%;
     text-align: justify;
 }
 
@@ -98,7 +99,7 @@ section {
 }
 
 .three {
-    background-color: #2c0707;
+    background-color: #090808;
 }
 
 .four {
@@ -106,7 +107,7 @@ section {
 }
 
 .five {
-    background-color: #1d0505;
+    background-color: #090808;
 }
 
 .tooltip {
@@ -374,7 +375,7 @@ text {
       fill: #fff;
   }
 
-#viz4 text {
+#viz4 .viz-container text {
     pointer-events: none;
     fill: #fff;
     font-weight: bold;
@@ -383,6 +384,7 @@ text {
     text-anchor: middle;
     font-size: 12px; /* This will be adjusted based on the bubble size in the JavaScript */
 }
+
   #viz4 circle, #viz3 circle {
       fill-opacity: 0.7;
       stroke: #fff;

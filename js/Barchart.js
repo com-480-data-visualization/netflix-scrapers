@@ -83,7 +83,6 @@ function showBubbleChart(year, imdbRange) {
 
                 node.on("click", d => {
         const data = d.target.__data__;
-        console.log(data);
         const infoDiv = document.getElementById("info");
         if (data.data.topActors) {
             // Create HTML content for the list of top actors

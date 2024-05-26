@@ -138,30 +138,25 @@
                 </h1>
             </div>
 
+            <!--Placeholder to add comments later-->
+            <div class="viz-text-container white-text">
+                <text>
+                    First, let us guide you through some basic statistics for a single actor/director. More specifically, we visualize the visualize the impact of an individual actor/director via a line chart. Switch between IMDb and TMDb scores to see if the movies were rated differently. Kindly note that since we keep track of movies and shows offered by Netflix, not all movies and shows starring the actor/director are listed.
+                </text>
+            </div>
+
             <div class="viz-container centered white-text">
                 <!--IMDB/TMDB scores of an actor per year graph-->
                 <input type="radio" name="score_type_linechart" id="IMDB-linechart" value="IMDB" checked>
-                <label for="IMDB-linechart">IMDB</label>
+                <label for="IMDB-linechart">IMDb</label>
                 <input type="radio" name="score_type_linechart" id="TMDB-linechart" value="TMDB">
-                <label for="TMDB-linechart">TMDB</label>
+                <label for="TMDB-linechart">TMDb</label>
                 <div id="form-name">
                     <label class="label-name" for="individual">Name of actor/director:</label><br>
                     <input class="input-name" type="text" id="individual" name="individual" onkeyup="showResults(this.value)"><br>
                     <div id="search-results"></div>
                 </div>
                 <div id="viz_scores_per_year"></div>
-            </div>
-
-            <!--Placeholder to add comments later-->
-            <div class="viz-text-container white-text">
-                <text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Facilisis volutpat est velit egestas dui id. Iaculis at erat pellentesque
-                    adipiscing commodo elit at imperdiet dui. Tortor consequat id porta nibh venenatis cras sed felis
-                    eget. Morbi tristique senectus et netus et malesuada fames ac. Cras sed felis eget velit aliquet
-                    sagittis id consectetur purus. Elementum tempus egestas sed sed risus pretium quam. Fames ac turpis
-                    egestas integer eget. Et malesuada fames ac turpis. Quam quisque id diam vel quam.
-                </text>
             </div>
         </section>
 
@@ -172,25 +167,20 @@
                 </h1>
             </div>
 
-            <div class="viz-container white-text centered">
-                <!--Circle graph with actor network-->
-                <input type="radio" name="score_type_network" id="IMDB-network" value="IMDB" checked>
-                <label for="IMDB-network">IMDB</label>
-                <input type="radio" name="score_type_network" id="TMDB-network" value="TMDB">
-                <label for="TMDB-network">TMDB</label>
-                <div id="viz_network"></div>
-            </div>
-
             <!--Placeholder to add comments later-->
             <div class="viz-text-container white-text">
                 <text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Facilisis volutpat est velit egestas dui id. Iaculis at erat pellentesque
-                    adipiscing commodo elit at imperdiet dui. Tortor consequat id porta nibh venenatis cras sed felis
-                    eget. Morbi tristique senectus et netus et malesuada fames ac. Cras sed felis eget velit aliquet
-                    sagittis id consectetur purus. Elementum tempus egestas sed sed risus pretium quam. Fames ac turpis
-                    egestas integer eget. Et malesuada fames ac turpis. Quam quisque id diam vel quam.
+                    Next, we delve behind the scenes to analyze the actor’s/director's success in movies and shows with other actors/directors by using networks. Each purple node denotes a movie/show, while each blue node represents an actor/director. Hover over the blue nodes to see the name of the actor/director. 
                 </text>
+            </div>
+
+            <div class="viz-container white-text centered">
+                <!--Circle graph with actor network-->
+                <input type="radio" name="score_type_network" id="IMDB-network" value="IMDB" checked>
+                <label for="IMDB-network">IMDb</label>
+                <input type="radio" name="score_type_network" id="TMDB-network" value="TMDB">
+                <label for="TMDB-network">TMDb</label>
+                <div id="viz_network"></div>
             </div>
         </section>
 
@@ -201,23 +191,18 @@
                 </h1>
             </div>
 
+            <!--Placeholder to add comments later-->
+            <div class="viz-text-container white-text">
+                <text>
+                    After focusing on an individual actor/director, let us now take a broader view to study the geographic distribution of actors' and directors' birthplaces across shows and movies in the Netflix dataset. Click on a country to see the exact distribution within a country. Red, dark circles indicate a large number of actors/directors origininating from that city. White, bright circles highlight a small number of individuals. 
+                </text>
+            </div>
+
             <div class="viz-container centered white-text">
                 <div id="world_map"></div>
             </div>
             <div class="slider-container">
                 <div id="slider"></div>
-            </div>
-
-            <!--Placeholder to add comments later-->
-            <div class="viz-text-container white-text">
-                <text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Facilisis volutpat est velit egestas dui id. Iaculis at erat pellentesque
-                    adipiscing commodo elit at imperdiet dui. Tortor consequat id porta nibh venenatis cras sed felis
-                    eget. Morbi tristique senectus et netus et malesuada fames ac. Cras sed felis eget velit aliquet
-                    sagittis id consectetur purus. Elementum tempus egestas sed sed risus pretium quam. Fames ac turpis
-                    egestas integer eget. Et malesuada fames ac turpis. Quam quisque id diam vel quam.
-                </text>
             </div>
         </section>
 
@@ -228,23 +213,18 @@
                 </h1>
             </div>
 
+            <!--Placeholder to add comments later-->
+            <div class="viz-text-container white-text">
+                <text>
+                    To wrap up our website, our last visualization will take you to the heart of IMDb scores, breaking down the scores each year into various ranges to reveal the main tags that emerge in form of a bar chart and a bubble chart.
+                </text>
+            </div>
+
             <div class="viz-container">
                 <div id="info" style="height=400px"></div>
                 <div id="chart-container"></div>
                 <button id="back-button" onclick="showDaviz()" style="display:none;">Back to Bar Chart</button>
 
-            </div>
-
-            <!--Placeholder to add comments later-->
-            <div class="viz-text-container white-text">
-                <text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                    et dolore magna aliqua. Facilisis volutpat est velit egestas dui id. Iaculis at erat pellentesque
-                    adipiscing commodo elit at imperdiet dui. Tortor consequat id porta nibh venenatis cras sed felis
-                    eget. Morbi tristique senectus et netus et malesuada fames ac. Cras sed felis eget velit aliquet
-                    sagittis id consectetur purus. Elementum tempus egestas sed sed risus pretium quam. Fames ac turpis
-                    egestas integer eget. Et malesuada fames ac turpis. Quam quisque id diam vel quam.
-                </text>
             </div>
         </section>
 
