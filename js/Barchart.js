@@ -175,7 +175,7 @@ function loadDaviz(dimensions) {
                 barmode: 'stack',
                 hovermode: 'closest',
                 title: 'Number of Actors in<br>IMDb Rating Ranges<br>per Release Year',
-                xaxis: {title: 'Release_Year'},
+                xaxis: {title: 'Release Year'},
                 yaxis: {title: 'Number of Actors'},
                 legend: {title: 'IMDb Rating Range'}
             };

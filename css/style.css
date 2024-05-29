@@ -34,6 +34,14 @@ section {
     text-shadow: 1px 1px 4px #000;
 }
 
+.textOverview {
+    text-align: justify;
+    text-justify: inter-word;
+    color: rgb(256, 256, 256);
+    font-weight: lighter;
+    font-size: 25px;
+}
+
 .NetflixScrapers {
     color: rgb(256, 256, 256);
     text-shadow: 1px 1px 4px #000;
@@ -42,7 +50,8 @@ section {
 
 .viz-title-container,
 .viz-container,
-.viz-text-container {
+.viz-text-container,
+.textOverview {
     width: 80%;
 }
 
@@ -55,8 +64,8 @@ section {
 }
 
 .viz-container {
-   order: 3;
-   padding-bottom: 2%;
+    order: 3;
+    padding-bottom: 2%;
 
 }
 
@@ -65,6 +74,7 @@ section {
     padding-top: 2%;
     padding-bottom: 2%;
     text-align: justify;
+    font-weight: lighter;
 }
 
 #viz_scores_per_year {
@@ -260,9 +270,15 @@ input[type="radio"]:checked {
 }
 
 @keyframes blink {
-    0% { opacity: 1; }
-    50% { opacity: 0; }
-    100% { opacity: 1; }
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 .blinking {
@@ -292,6 +308,14 @@ footer {
         font-size: 40px;
     }
 
+    .textOverview {
+        font-size: 15px;
+    }
+
+    .viz-text-container {
+        font-size: 15px;
+    }
+
     .title {
         font-size: 30px;
     }
@@ -299,7 +323,17 @@ footer {
     #menu-icon {
         display: block;
     }
- }
+}
+
+@media screen and (max-width: 1000px) {
+    #chart-container {
+    }
+    #info {
+        z-index: 0;
+        position: relative;
+        top: 80%;
+    }
+}
 
 
 /* ---------- Netflix logo animation ---------- */
@@ -320,6 +354,7 @@ footer {
     stop-opacity: var(--shadow-intensity);
 
 }
+
 .shadow-end {
     stop-color: var(--shadow-colour);
     stop-opacity: 0;
@@ -345,35 +380,39 @@ body::-webkit-scrollbar {
 }
 
 
-
 #back-button {
-          display: none; /* Start with the back button hidden */
-          position: fixed;
-          top: 10%;
-          right: 10%;
-          background: white;
-          border: 1px solid black;
-          padding: 10px;
-          border-radius: 8px;
-          z-index: 1000; /* Ensure it's on top */
-      }
-  #info {
-            display: flex; /* Start with the back button hidden */
-            justify-content: center; /* Center horizontally */
-            position: fixed;
-            top: 35%;
-            right: 20%;
-            background: white;
-            border: 1px solid black;
-            padding: 10px;
-            border-radius: 8px;
-            z-index: 1000; /* Ensure it's on top */
-            display: none;
-        }
+    display: none; /* Start with the back button hidden */
+    position: absolute;
+    top: 35%;
+    right: 5%;
+    background: white;
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 8px;
+    z-index: 1000; /* Ensure it's on top */
+}
+
+#info {
+    display: none;
+    order: 2;
+    justify-content: center; /* Center horizontally */
+    position: absolute;
+    top: 35%;
+    right: 20%;
+    background: white;
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 8px;
+    z-index: 1000; /* Ensure it's on top */
+}
+
+#info > ul li {
+    list-style-type: none;
+}
 
 text {
-      fill: #fff;
-  }
+    fill: #fff;
+}
 
 #viz4 .viz-container text {
     pointer-events: none;
@@ -385,38 +424,42 @@ text {
     font-size: 12px; /* This will be adjusted based on the bubble size in the JavaScript */
 }
 
-  #viz4 circle, #viz3 circle {
-      fill-opacity: 0.7;
-      stroke: #fff;
-      stroke-width: 1.5px;
-  }
+#viz4 circle, #viz3 circle {
+    fill-opacity: 0.7;
+    stroke: #fff;
+    stroke-width: 1.5px;
+}
 
- #viz4 circle:hover {
-      stroke: #000;
-      stroke-width: 2px;
-  }
+#viz4 circle:hover {
+    stroke: #000;
+    stroke-width: 2px;
+}
 
-  .tooltip {
-      position: absolute;
-      text-align: center;
-      padding: 8px;
-      font-size: 13px;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.3s;
-  }
-  #chart-container {
-      display: flex;
-      justify-content: center;
-      width: 100%;
-      height: 500px; /* Adjust based on your preference */
-      margin-bottom: 30px;
-  }
+.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 8px;
+    font-size: 13px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
 
-  button {
-      padding: 10px;
-      margin: 10px;
-  }
+#chart-container {
+    display: flex;
+    order: 1;
+    justify-content: center;
+    width: 100%;
+    height: 500px; /* Adjust based on your preference */
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 0;
+}
+
+button {
+    padding: 10px;
+    margin: 10px;
+}
