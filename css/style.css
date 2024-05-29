@@ -325,17 +325,6 @@ footer {
     }
 }
 
-@media screen and (max-width: 1000px) {
-    #chart-container {
-    }
-    #info {
-        z-index: 0;
-        position: relative;
-        top: 80%;
-    }
-}
-
-
 /* ---------- Netflix logo animation ---------- */
 
 :root {

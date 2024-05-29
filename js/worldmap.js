@@ -32,11 +32,13 @@ function worldMap(world_info, person, dimensions) {
 
     svg.call(zoom);
 
+    let zoomFactor = dimensions.width < 600 ? 4 : 1;
+
     // Map and projection
     const projection = d3
         .geoEquirectangular()
         .center([0, 15]) // set centre to further North as we are cropping more off bottom of map
-        .scale([width_svg / (2 * Math.PI)])
+        .scale([width_svg / (2 * Math.PI) * zoomFactor])
         .translate([width_svg / 2, height_svg / 2])
     ;
     const path = d3.geoPath().projection(projection);
@@ -224,11 +226,12 @@ function worldMap(world_info, person, dimensions) {
                 .domain([1, maxSize])
                 .range(["white", "red"]);
 
+            const sliderWidth = width_svg < 600 ? width_svg : width_svg / 2;
             var slider = d3.sliderHorizontal()
                 .min(1)
                 .max(maxSize + 1)
                 .step(1)
-                .width(width_svg / 2 - 40)
+                .width(sliderWidth - 40)
                 .displayValue(true)
                 .on('onchange', (val) => {
                     resetZoom();
@@ -239,7 +242,7 @@ function worldMap(world_info, person, dimensions) {
                 .append('div')
                 .attr("id", "slider")
                 .append('svg')
-                .attr('width', width_svg / 2)
+                .attr('width', sliderWidth)
                 .attr('height', 80)
                 .append('g')
                 .attr('transform', 'translate(20,40)')
@@ -332,7 +335,7 @@ function worldMap(world_info, person, dimensions) {
                     .text("Birthplace not found.");
             }
 
-            drawLegendMap(svg, colorScale, width_svg / 100, (height_svg * width_svg) / 2500);
+            drawLegendMap(svg, colorScale, width_svg / 100, (height_svg + width_svg) * 0.2);
 
         }
 
@@ -342,10 +345,29 @@ function worldMap(world_info, person, dimensions) {
 
 function drawLegendMap(svg, colorScale, legendWidth, legendHeight) {
     const legendMargin = {top: (height_svg - legendHeight) / 2, right: 10, bottom: 20, left: 0};
-    let textSize = 8 + parseInt(width_svg / 600);
+    const textSize = 12 + parseInt(width_svg / 600);
+    const spacerHeight = 10;
+
     const legendGroup = svg.append("g")
         .attr("class", "legendMap")
         .attr("transform", `translate(${legendMargin.left},${legendMargin.top})`);
+
+    const titleText = legendGroup.append("text")
+        .attr("x", 0)
+        .attr("y", -textSize * 2)
+        .style("font-size", textSize + "px")
+        .style("font-weight", "bold")
+        .style("text-anchor", "start");
+
+    titleText.append("tspan")
+        .attr("x", 0)
+        .attr("dy", "1em")
+        .text("Number of");
+
+    titleText.append("tspan")
+        .attr("x", 0)
+        .attr("dy", "1em")
+        .text("actors/directors");
 
     const legendData = [
         {color: d3.interpolateYlOrRd(0), label: "0-1"},
@@ -366,20 +388,21 @@ function drawLegendMap(svg, colorScale, legendWidth, legendHeight) {
         .enter()
         .append("rect")
         .attr("x", 0)
-        .attr("y", (d, i) => i * (legendHeight / legendData.length))
+        .attr("y", (d, i) => spacerHeight + (i * (legendHeight / legendData.length)))
         .attr("width", legendWidth)
         .attr("height", legendHeight / legendData.length)
         .attr("fill", d => d.color);
 
-    legendGroup.selectAll("text")
+    legendGroup.selectAll("text.label")
         .data(legendData)
         .enter()
         .append("text")
+        .attr("class", "label")
         .attr("x", legendWidth + 5)
-        .attr("y", (d, i) => (i + 0.5) * (legendHeight / legendData.length))
+        .attr("y", (d, i) => spacerHeight + ((i + 0.5) * (legendHeight / legendData.length)))
         .attr("dy", "0.35em")
         .text(d => d.label)
-        .style("font-size", +textSize.toString() + "px")
+        .style("font-size", textSize + "px")
         .style("text-anchor", "start");
 }
 
