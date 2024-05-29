@@ -198,7 +198,8 @@ function loadDaviz() {
 }
 
 
-function showDaviz(dimensions){
+function showDaviz(){
+    dimensions = getWindowData()
     width = dimensions.width;
     height = dimensions.height;
     const svg = d3.select("#chart-container").html('') // Clear the previous chart
