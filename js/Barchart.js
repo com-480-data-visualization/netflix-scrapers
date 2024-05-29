@@ -174,7 +174,7 @@ function loadDaviz(dimensions) {
                 height: dimensions.height,
                 barmode: 'stack',
                 hovermode: 'closest',
-                title: 'Number of Actors in IMDb Rating Ranges per Release_Year',
+                title: 'Number of Actors in<br>IMDb Rating Ranges<br>per Release Year',
                 xaxis: {title: 'Release_Year'},
                 yaxis: {title: 'Number of Actors'},
                 legend: {title: 'IMDb Rating Range'}
@@ -200,14 +200,11 @@ function loadDaviz(dimensions) {
 }
 
 
-function showDaviz(){
-    dimensions = getWindowData()
+function showDaviz(dimensions){
+
     width = dimensions.width;
     height = dimensions.height;
-    const svg = d3.select("#chart-container").html('') // Clear the previous chart
-            .append("svg")
-            .attr("width", width)
-            .attr("height", height);
+    const svg = d3.select("#chart-container").html(''); // Clear the previous chart
 
     document.getElementById('back-button').style.display = 'none';
     const infoDiv = document.getElementById("info");
