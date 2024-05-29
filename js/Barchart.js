@@ -113,8 +113,8 @@ function showBubbleChart(year, imdbRange) {
 }
 
 function loadDaviz() {
+
     // Your D3 code to draw the bar chart (Daviz)
-    d3.select("#chart-container").html('')
     const infoDiv = document.getElementById("info");
     infoDiv.style.display = 'none';
     document.getElementById('back-button').style.display = 'none';
@@ -198,12 +198,13 @@ function loadDaviz() {
 }
 
 
-function showDaviz() {
-    diameter=400;
+function showDaviz(dimensions){
+    width = dimensions.width;
+    height = dimensions.height;
     const svg = d3.select("#chart-container").html('') // Clear the previous chart
             .append("svg")
-            .attr("width", diameter)
-            .attr("height", diameter);
+            .attr("width", width)
+            .attr("height", height);
 
     document.getElementById('back-button').style.display = 'none';
     const infoDiv = document.getElementById("info");
