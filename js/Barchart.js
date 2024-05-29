@@ -112,7 +112,7 @@ function showBubbleChart(year, imdbRange) {
 
 }
 
-function loadDaviz() {
+function loadDaviz(dimensions) {
 
     // Your D3 code to draw the bar chart (Daviz)
     const infoDiv = document.getElementById("info");
@@ -170,6 +170,8 @@ function loadDaviz() {
 
 
             const layout = {
+                width: dimensions.width,
+                height: dimensions.height,
                 barmode: 'stack',
                 hovermode: 'closest',
                 title: 'Number of Actors in IMDb Rating Ranges per Release_Year',
@@ -210,5 +212,5 @@ function showDaviz(){
     document.getElementById('back-button').style.display = 'none';
     const infoDiv = document.getElementById("info");
     infoDiv.style.display = 'none';
-    loadDaviz(); // Reload or refresh Daviz if necessary
+    loadDaviz(dimensions); // Reload or refresh Daviz if necessary
 }
