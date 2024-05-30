@@ -8,9 +8,11 @@
 
 [Milestone 1](#milestone-1) • [Milestone 2](#milestone-2) • [Milestone 3](#milestone-3)
 
-## Milestone 1 (29th March, 5pm)
+## Milestone 1
 
-**10% of the final grade**
+**Deadline: 29th March, 5pm**
+
+**10% of the final grade **
 
 ### Dataset
 
@@ -84,7 +86,9 @@ Our project idea was mainly inspired by a few articles. Our first inspiration ca
 As far as we know, we are the only group that uses this dataset. We do recognize that previous groups also created visualizations for movies. But instead on focusing on the movie [revenue](https://github.com/com-480-data-visualization/com-480-project-vizzybussy/blob/master/process_book.pdf) or the [ethnicity](https://github.com/epfl-ada/ada-2023-project-draco?tab=readme-ov-file) of the actors, we plan on visualizing the data in a different way by focusing more on the actor's success of movies or shows and their (un)successful collaboration with other actors. 
 
 
-## Milestone 2 (26th April, 5pm)
+## Milestone 2
+
+**Deadline: 26th April, 5pm**
 
 **10% of the final grade**
 
@@ -93,7 +97,9 @@ Visualization sketches and details: [Milestone_2](Milestone_2.pdf)
 Website draft link: [netflix-scrapers.vercel.app](https://netflix-scrapers.vercel.app)
 
 
-## Milestone 3 (31st May, 5pm)
+## Milestone 3
+
+**Deadline: 31st May, 5pm**
 
 **80% of the final grade**
 
