@@ -97,6 +97,9 @@ Website draft link: [netflix-scrapers.vercel.app](https://netflix-scrapers.verce
 
 **80% of the final grade**
 
+Process book: [link](Process_Book.pdf)
+
+Screencast: [link](https://youtu.be/SLSprlCSCCo)
 
 ## Late policy
 
