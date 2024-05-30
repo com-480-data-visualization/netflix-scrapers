@@ -12,7 +12,7 @@
 
 **Deadline: 29th March, 5pm**
 
-**10% of the final grade **
+**10% of the final grade**
 
 ### Dataset
 
