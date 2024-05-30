@@ -1,40 +1,57 @@
+/**
+ * @fileOverview Netflix Scrapers World map, COM480 @ EPFL
+ * @module js/worldmap
+ * @description This file contains the functions to display a world map with the number of actors and directors per country.
+ * @author Jérémy Chaverot
+ * @version 1.0.0
+ * @created 2024-05-10
+ * @last-modified 2024-05-31
+ */
+
+/** Definition of some global variables */
 width_svg = 0;
 height_svg = 0;
 minRadius = 3;
 maxRadius = 20;
 
-// Took inspiration from Patrick's code and https://d3-graph-gallery.com/graph/choropleth_hover_effect.html
+/**
+ * Displays a world map with the number of actors and directors per country.
+ *
+ * @param {Map} world_info - A map with the information of the countries.
+ * @param {Object} person - The information of the person.
+ * @param {Object} dimensions - The dimensions of the SVG.
+ * @note Took inspiration from Patrick's code and https://d3-graph-gallery.com/graph/choropleth_hover_effect.html
+ */
 function worldMap(world_info, person, dimensions) {
 
+    /** Retrieve the dimensions of the svg */
     width_svg = dimensions.width + margin.left + margin.right;
     height_svg = dimensions.height + margin.top + margin.bottom;
 
+    /** Create the svg element for the world map */
     $('#world_map').empty()
     var svg = d3.select("#world_map")
         .append("svg")
         .attr("width", width_svg)
         .attr("height", height_svg);
 
+    /** The zoom utils for the map navigation */
     function zoomed(event) {
         svg.selectAll('path').attr("transform", event.transform);
         svg.selectAll('circle').attr("transform", event.transform);
     }
-
     function resetZoom() {
         svg.transition()
             .duration(500)
             .call(zoom.transform, d3.zoomIdentity);
     }
-
     const zoom = d3.zoom()
         .scaleExtent([1, 8])
         .on("zoom", zoomed);
-
     svg.call(zoom);
-
     let zoomFactor = dimensions.width < 600 ? 4 : 1;
 
-    // Map and projection
+    /** Definition of the map and the projection */
     const projection = d3
         .geoEquirectangular()
         .center([0, 15]) // set centre to further North as we are cropping more off bottom of map
@@ -42,13 +59,15 @@ function worldMap(world_info, person, dimensions) {
         .translate([width_svg / 2, height_svg / 2])
     ;
     const path = d3.geoPath().projection(projection);
-    // Data and color scale
+
+    /** Definition of the data */
     const data = new Map();
     world_info.forEach((value, key) => {
         const sum = parseInt(value.actors, 10) + parseInt(value.directors, 10);
         data.set(key, sum);
     });
 
+    /** Definition of the color scale */
     const colorScale = d3.scaleThreshold()
         .domain([0, 1, 10, 25, 50, 100, 250, 500, 1000, 2000, 4000])
         .range([
@@ -66,6 +85,7 @@ function worldMap(world_info, person, dimensions) {
         ]);
 
 
+    /** Definition of the tooltip */
     var tooltip = d3.select('#world_map')
         .append('div')
         .style('opacity', 0)
@@ -76,11 +96,13 @@ function worldMap(world_info, person, dimensions) {
         .style('color', 'white')
         .style('width', '275px');
 
-    // Load external data and boot
+    /** Load external data with the geojson that traces the world segments and boot */
     Promise.all([
         d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")]).then(function (loadData) {
         let topo = loadData[0]
 
+
+        /** Defines on mouse over a country action */
         let mouseOver = function (d) {
             d3.selectAll(".Country")
                 .transition()
@@ -93,6 +115,7 @@ function worldMap(world_info, person, dimensions) {
                 .style("stroke", "black")
         }
 
+        /** Defines on mouse leave a country action */
         let mouseLeave = function (d) {
             d3.selectAll(".Country")
                 .transition()
@@ -104,11 +127,12 @@ function worldMap(world_info, person, dimensions) {
                 .style("stroke", null)
         }
 
+        /** Define the tooltip when over a country */
         var showTooltipCountry = function (event, d) {
             tooltip.transition().duration(duration_tooltip);
             text = '<span class="tooltip-header">Country: ' + d.properties.name + '</span><br>';
             info = world_info.get(d.id);
-            if (info != undefined) {
+            if (info !== undefined) {
                 text += 'Actors: ' + info.actors + '<br>';
                 text += 'Directors: ' + info.directors + '<br>';
                 text += 'Mean IMDB: ' + info.imdb + '<br>';
@@ -119,6 +143,8 @@ function worldMap(world_info, person, dimensions) {
                 .style("left", event.x + offset_tooltip + "px")
                 .style("top", event.y + offset_tooltip + "px");
         }
+
+        /** Define the tooltip when over a birthplace */
         var showTooltipPoint = function (event, d) {
             tooltip.transition().duration(duration_tooltip);
             text = 'Name: ' + person.name + '<br>';
@@ -139,6 +165,7 @@ function worldMap(world_info, person, dimensions) {
                 .style("opacity", 0);
         }
 
+        /** Function that draws the birthplace of the specified person */
         let drawPerson = function (proj, color, size) {
             // Convert latitude and longitude to SVG coordinates
             const [x, y] = proj([person.position.long, person.position.lat]);
@@ -154,13 +181,18 @@ function worldMap(world_info, person, dimensions) {
                 .classed("blinking", true);
         }
 
+        /**
+         * Functions that draws the given country.
+         *
+         * @param {string} id - The id of the country.
+         */
         function drawCountry(id) {
-            // Filter data to only keep the country of interest
+            /** Filter data to only keep the country of interest */
             data.features = topo.features.filter(d => {
-                return d.id == id;
+                return d.id === id;
             });
 
-            // Add a circle for the place of birth of the actor/director
+            /** Add a circle for the place of birth of the actor/director */
             let bubbles = retrieveBirthplacesCountry(id);
             let maxSize = 0;
             for (let i = 0; i < bubbles.length; i++) {
@@ -169,14 +201,14 @@ function worldMap(world_info, person, dimensions) {
                 }
             }
 
-            // Remove the map
+            /** Remove the map */
             svg.selectAll("path").remove();
             svg.select(".legendMap").remove();
             svg.selectAll("circle").remove();
             svg.select(".legendBubbles").remove();
             d3.select("#slider").remove();
 
-            // Set projection
+            /** Set projection */
             const country = world_info.get(id);
             const position = country.position;
             const lat = parseFloat(position.lat);
@@ -186,7 +218,7 @@ function worldMap(world_info, person, dimensions) {
                 .scale(country.scale)
                 .translate([width_svg / 2, height_svg / 2]);
 
-            // Zoom on the country
+            /** Zoom on the country */
             svg.append("g")
                 .selectAll("path")
                 .data(topo.features)
@@ -205,6 +237,7 @@ function worldMap(world_info, person, dimensions) {
                     drawMap();
                 });
 
+            /** Define the on mouse over bubbles action */
             var mouseoverbubble = function (event, d) {
                 tooltip.style("opacity", 1);
             };
@@ -218,14 +251,17 @@ function worldMap(world_info, person, dimensions) {
                 tooltip.style("opacity", 0);
             };
 
+            /** Define the radius scale for the bubble */
             var radiusScale = d3.scaleLog()
                 .domain([1, maxSize])
                 .range([minRadius, maxRadius]);
 
+            /** Define the color scale for the bubble */
             var bubbleColorScale = d3.scaleLog()
                 .domain([1, maxSize])
                 .range(["white", "red"]);
 
+            /** Define the slider */
             const sliderWidth = width_svg < 600 ? width_svg : width_svg / 2;
             var slider = d3.sliderHorizontal()
                 .min(1)
@@ -248,6 +284,9 @@ function worldMap(world_info, person, dimensions) {
                 .attr('transform', 'translate(20,40)')
                 .call(slider);
 
+            /**
+             * Function that draws the bubbles
+             */
             function drawBubbles(minCount) {
                 svg.selectAll("circle").remove();
                 svg.selectAll("myCircles")
@@ -283,20 +322,23 @@ function worldMap(world_info, person, dimensions) {
             drawLegendBubbles(svg, bubbleColorScale, maxSize, country);
         }
 
+        /**
+         * Function that draws the map.
+         */
         let drawMap = function () {
-            // Remove the map
+            /** Remove the map */
             svg.selectAll("path").remove();
             svg.selectAll("circle").remove();
 
-            // Draw the map
+            /** Draw the map */
             svg.append("g")
                 .selectAll("path")
                 .data(topo.features)
                 .enter()
                 .append("path")
-                // draw each country
+                /** draw each country */
                 .attr("d", path)
-                // set the color of each country
+                /** set the color of each country */
                 .attr("fill", function (d) {
                     d.total = data.get(d.id) || 0;
                     return colorScale(d.total);
@@ -322,10 +364,11 @@ function worldMap(world_info, person, dimensions) {
                     hideTooltip(event, d);
                 });
 
+            /** Logic to draw the person's birthplace if found, else states that wasn't */
             if (person.place != null) {
                 drawPerson(projection, "#FFFF00", 5);
             } else {
-                // Display a message that the birthplace was not found
+                /** Display a message that the birthplace was not found */
                 var alertText = svg.append("text")
                     .attr("x", width_svg / 2)
                     .attr("y", 0.1 * height_svg)
@@ -336,13 +379,20 @@ function worldMap(world_info, person, dimensions) {
             }
 
             drawLegendMap(svg, colorScale, width_svg / 100, (height_svg + width_svg) * 0.2);
-
         }
 
         drawMap();
     })
 }
 
+/**
+ * Draws the legend for the map.
+ *
+ * @param svg The SVG element.
+ * @param colorScale The color scale.
+ * @param legendWidth The width of the legend.
+ * @param legendHeight The height of the legend.
+ */
 function drawLegendMap(svg, colorScale, legendWidth, legendHeight) {
     const legendMargin = {top: (height_svg - legendHeight) / 2, right: 10, bottom: 20, left: 0};
     const textSize = 12 + parseInt(width_svg / 600);
@@ -406,6 +456,14 @@ function drawLegendMap(svg, colorScale, legendWidth, legendHeight) {
         .style("text-anchor", "start");
 }
 
+/**
+ * Draws the legend for the bubbles.
+ *
+ * @param svg The SVG element.
+ * @param colorScale The color scale.
+ * @param maxSize The maximum size of the bubble.
+ * @param countryInfo The information of the country.
+ */
 function drawLegendBubbles(svg, colorScale, maxSize, countryInfo) {
     const legendWidth = 100 + parseInt(width_svg / 15);
     const legendMargin = {top: height_svg - 30, right: 20, bottom: 20, left: 20};
