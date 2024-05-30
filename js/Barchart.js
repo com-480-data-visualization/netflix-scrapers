@@ -48,15 +48,6 @@ function showBubbleChart(year, imdbRange) {
                 .attr("width", diameter)
                 .attr("height", diameter);
 
-            var tooltip = svg.append('div')
-                .style('opacity', 0)
-                .attr('class', 'tooltip')
-                .style('background-color', 'black')
-                .style('border-radius', '15px')
-                .style('padding', '12px')
-                .style('color', 'white')
-                .style('width', '275px');
-
             const bubble = d3.pack()
                 .size([diameter, diameter])
                 .padding(2);
@@ -86,31 +77,50 @@ function showBubbleChart(year, imdbRange) {
                 .text(d => d.data.genre.substring(0, d.r / 3))
                 .attr("font-size", d => d.r / 5);
 
-            node.on("mouseover", d => {
-                const data = d.target.__data__;
-                if (data.data.topActors) {
-                    let content = `<h3>Top Actors in ${data.data.genre}</h3><ul>`;
-                    data.data.topActors.forEach(actor => {
-                        content += `<li>${actor.name} (Score: ${actor.score})</li>`;
+            var tooltip = d3.select("#chart-container")
+                .append('div')
+                .style('opacity', 0)
+                .attr('class', 'tooltip')
+                .style('background-color', 'black')
+                .style('border-radius', '15px')
+                .style('padding', '12px')
+                .style('color', 'white')
+                .style('width', '275px');
+            tooltip.html('');
+    
+            var showTooltip = function (event, d) {
+                if (d.data.topActors) {
+                    let content = `<h3>Top Actors in ${d.data.genre}</h3><br>`;
+                    d.data.topActors.forEach(actor => {
+                        content += `${actor.name} (Score: ${actor.score})<br>`;
                     });
-                    content += `<p>Total Actors: ${data.data.total}</p>`;
-                    content += '</ul>';
-
+                    content += `<p>Total Actors: ${d.data.total}</p>`;
+                    content += '';
                     tooltip.html(content)
-                        .style("left", (d.pageX + 10) + "px")
-                        .style("top", (d.pageY - 10) + "px")
+                        .style("left", (event.x / 3) + offset_tooltip + "px")
+                        .style("top",  (event.y / 3) + offset_tooltip + "px")
                         .style('opacity', 1);
-                } else {
+                } else { 
                     // If no data available, display a message
                     tooltip.html('<p>No actor data available for this genre.</p>')
-                        .style("left", (d.pageX + 10) + "px")
-                        .style("top", (d.pageY - 10) + "px")
+                        .style("left", + "px")
+                        .style("top",  + "px")
                         .style('opacity', 1);
-                }
-            })
-                .on("mouseout", () => {
-                    tooltip.style('opacity', 0);
-                });
+                }   
+            }
+            var moveTooltip = function(event, d) {
+                tooltip.style("left", (event.x / 3) + offset_tooltip + "px")
+                        .style("top", (event.y / 3) + offset_tooltip + "px");
+          
+            }
+            var hideTooltip = function(event, d) {
+                tooltip.transition()
+                        .duration(duration_tooltip)
+                        .style("opacity", 0);
+            }
+            node.on("mouseover", showTooltip)
+            .on("mousemove", moveTooltip)
+            .on("mouseleave", hideTooltip);
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.error('Error loading JSON data:', textStatus, errorThrown);

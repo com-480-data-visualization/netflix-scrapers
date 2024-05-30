@@ -38,7 +38,7 @@ section {
     text-align: justify;
     text-justify: inter-word;
     color: rgb(256, 256, 256);
-    font-weight: lighter;
+    font-weight: 200;
     font-size: 25px;
 }
 
@@ -74,7 +74,7 @@ section {
     padding-top: 2%;
     padding-bottom: 2%;
     text-align: justify;
-    font-weight: lighter;
+    font-weight: 200;
 }
 
 #viz_scores_per_year {
@@ -372,7 +372,7 @@ body::-webkit-scrollbar {
 #back-button {
     display: none; /* Start with the back button hidden */
     position: absolute;
-    top: 35%;
+    top: 45%;
     right: 5%;
     background: white;
     border: 1px solid black;
@@ -393,10 +393,6 @@ body::-webkit-scrollbar {
     padding: 10px;
     border-radius: 8px;
     z-index: 1000; /* Ensure it's on top */
-}
-
-#info > ul li {
-    list-style-type: none;
 }
 
 text {
@@ -442,7 +438,6 @@ text {
     order: 1;
     justify-content: center;
     width: 100%;
-    height: 500px; /* Adjust based on your preference */
     margin-bottom: 30px;
     position: relative;
     z-index: 0;

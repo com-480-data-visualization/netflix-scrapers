@@ -3,7 +3,7 @@ const rating_min = 0.0
 const rating_max = 10.0
 const offset_year = 1
 const duration_animation = 1000
-const duration_tooltip = 200
+const duration_tooltip = 150
 const offset_tooltip = 10
 
 const year_min = 1950
