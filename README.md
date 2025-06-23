@@ -7,6 +7,9 @@
 | Jérémy Chaverot| 315858 |
 
 [Milestone 1](#milestone-1) • [Milestone 2](#milestone-2) • [Milestone 3](#milestone-3)
+Process book: [Process_Book](Process_Book.pdf)
+
+Screencast: [https://youtu.be/SLSprlCSCCo](https://youtu.be/SLSprlCSCCo)
 
 ## Milestone 1
 
