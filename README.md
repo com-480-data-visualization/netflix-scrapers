@@ -10,7 +10,10 @@
 Process book: [Process_Book](Process_Book.pdf)
 
 Screencast: [https://youtu.be/SLSprlCSCCo](https://youtu.be/SLSprlCSCCo)
+# Screencast Demo
+[![Netflix Scrapers Demo](https://img.youtube.com/vi/SLSprlCSCCo/maxresdefault.jpg)](https://youtu.be/SLSprlCSCCo)
 
+*Click the image above to watch the Screencast Demo of the Website
 ## Milestone 1
 
 **Deadline: 29th March, 5pm**
